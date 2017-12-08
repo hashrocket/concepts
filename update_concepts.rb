@@ -128,7 +128,7 @@ concepts.each do |concept|
   concept_yaml = YAML.load(concept[:concept_config]['text'])
 
   banner_sub_filter = if concept_yaml['banner']
-                        "sub_filter <body> '<body><header style="background-color: #414042; height: 2rem; padding: 0.4rem; color: white;"><img src="https://d15zqjc70bk603.cloudfront.net/assets/brand/hr_logo_h_light-4cb402f22041c39699a752bd21aaa38ebd860b343ae20a5fe97342c8ec53f156.svg"></img></header>';"
+                        "sub_filter <body> '<body><header style=\"background-color: #414042; height: 2rem; padding: 0.4rem; color: white;\"><img src=\"https://d15zqjc70bk603.cloudfront.net/assets/brand/hr_logo_h_light-4cb402f22041c39699a752bd21aaa38ebd860b343ae20a5fe97342c8ec53f156.svg\"></img></header>';"
 
 
                       end
@@ -174,7 +174,13 @@ __END__
     <meta name="theme-color" content="#000000">
     <link rel="shortcut icon" href="https://hashrocket.com/favicon.ico">
     <title>Concepts - Hashrocket</title>
-    <styles>
+    <style>
+      body {
+	margin: 0;
+        background-color: white;
+        font-family: Helvetica, sans-serif;
+      }
+
       header {
         background-color: #414042;
         height: 2rem;
@@ -182,19 +188,22 @@ __END__
         color: white;
       }
 
-      body {
-        background-color: white;
-        font: Helvetica, sans-serif;
+      header img {
+	height: 2rem;
+      }	
+
+      section {
+	margin-left: 32px;
       }
 
       ul {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: space-between;
         min-width: 42rem;
         max-width: 60rem;
         height: 100%;
+	padding-left: 0;
       }
 
       li {
@@ -202,8 +211,9 @@ __END__
         flex-direction: column;
         background-color: #c8c8c8;
         min-width: 16rem;
-        min-height: 8rem;
-        margin: 2rem;
+        height: 8rem;
+        margin: 0 2rem 2rem 0rem;
+	padding: 1rem;
       }
 
       li h2 {
@@ -216,11 +226,11 @@ __END__
 
       a:link, a:active, a:visited, a:hover, a:focus
       {
-        decoration: none;
+        text-decoration: none;
         color: #414042;
       }
 
-    </styles>
+    </style>
   </head>
   <body>
     <header>
