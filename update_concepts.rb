@@ -128,7 +128,7 @@ concepts.each do |concept|
   concept_yaml = YAML.load(concept[:concept_config]['text'])
 
   banner_sub_filter = if concept_yaml['banner']
-                        "sub_filter <body> '<body><header style=\"background-color: #414042; height: 2rem; padding: 0.4rem; color: white;\"><img src=\"https://d15zqjc70bk603.cloudfront.net/assets/brand/hr_logo_h_light-4cb402f22041c39699a752bd21aaa38ebd860b343ae20a5fe97342c8ec53f156.svg\"></img></header>';"
+                        "sub_filter <body> '<body><header style=\"background-color: #414042; height: 2rem; padding: 0.4rem; color: white;\"><img style=\"height: 2rem;\" src=\"https://d15zqjc70bk603.cloudfront.net/assets/brand/hr_logo_h_light-4cb402f22041c39699a752bd21aaa38ebd860b343ae20a5fe97342c8ec53f156.svg\"></img></header>';"
 
 
                       end
@@ -145,7 +145,6 @@ concepts.each do |concept|
       proxy_pass #{concept_yaml['url']};
       proxy_redirect off;
       proxy_read_timeout 5m;
-      proxy_set_header Host $http_host;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-Proto http;
