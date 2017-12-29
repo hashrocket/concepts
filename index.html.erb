@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <link rel="shortcut icon" href="https://hashrocket.com/favicon.ico">
+    <title>Concepts - Hashrocket</title>
+    <style>
+      body {
+        margin: 0;
+        background-color: white;
+        font-family: Helvetica, sans-serif;
+      }
+
+      header {
+        background-color: #414042;
+        height: 2rem;
+        padding: 0.4rem;
+        color: white;
+      }
+
+      header img {
+        height: 2rem;
+      }
+
+      section {
+        margin-left: 32px;
+      }
+
+      ul {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        min-width: 42rem;
+        max-width: 60rem;
+        padding-left: 0;
+      }
+
+      li {
+        display: flex;
+        flex-direction: column;
+        background-color: #c8c8c8;
+        min-width: 16rem;
+        max-width: 24rem;
+        min-height: 8rem;
+        margin: 0 2rem 2rem 0rem;
+        padding: 1rem;
+      }
+
+      li span {
+        font-family: Helvetica, "San Serif";
+        font-size: 1.6em;
+        font-weight: bold;
+        color: #af1e23;
+      }
+
+      li div {
+        min-height: 1.8rem;
+      }
+
+      li div.title { 
+        display: flex;
+        flex-direction: column;
+      }
+
+      li div.title a { 
+        display: inline;
+      }
+
+      a:link, a:active, a:visited, a:hover, a:focus {
+        text-decoration: none;
+        color: #414042;
+      }
+
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="https://d15zqjc70bk603.cloudfront.net/assets/brand/hr_logo_h_light-4cb402f22041c39699a752bd21aaa38ebd860b343ae20a5fe97342c8ec53f156.svg" class="App-logo" alt="logo">
+    </header>
+    <section>
+      <h1>General</h1>
+      <ul>
+        <% concepts.each do |concept| %>
+        <% concept_yaml = YAML.load(concept[:concept_config]['text']) %>
+          <li>
+            <div class='title'>
+              <p>
+                <a href="http://<%= concept[:concept_url] %>">
+                  <span><%= concept_yaml['name'] %></span>
+                </a>
+                <a href="<%= "https://github.com/#{concept[:login]}" %>">by <%= concept[:login] %></a>
+              </p>
+            <div>
+            <div class='description'>
+              <%= concept_yaml['description'] %>
+            </div>
+            <div class='repo'>
+              <a href="<%= "https://github.com/#{concept[:login]}/#{concept[:repo]}" %>">
+                github
+              </a>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  </body>
+</html>
