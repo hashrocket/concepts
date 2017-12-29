@@ -2,10 +2,31 @@
 require 'bundler'
 require 'json'
 
+require 'logger'
+
+@logger = Logger.new(File.open('/var/log/hr_concepts.log', File::WRONLY | File::APPEND), 'weekly')
+@logger.info('Starting Update Concepts')
+
+at_exit do
+  if $!
+    @logger.error("Uncaught Error: #{$!.message}")
+  else
+    @logger.info('Ending Update Concepts')
+  end
+end
+
 Bundler.require                    # defaults to all groups
 
-url = 'https://api.github.com/graphql'
-token = File.read('graphql.token').strip
+@url = 'https://api.github.com/graphql'
+@token = File.read('graphql.token').strip
+
+def graphql_request(payload)
+  @logger.info('request')
+  RestClient.post @url, payload.to_json, {'Authorization' => "bearer #{@token}"}
+rescue => e
+  @logger.error(e.message)
+  exit(1)
+end
 
 payload = {
   "query": "query {
@@ -40,9 +61,9 @@ payload = {
   }"
 }
 
-response = RestClient.post url, payload.to_json, {'Authorization' => "bearer #{token}"}
+response = graphql_request(payload)
 
-puts "Successful initial github query with code: #{response.code}"
+@logger.info("Successful initial github query with code: #{response.code}")
 
 graphql_response_json = JSON.parse(response.body)
 
@@ -99,9 +120,9 @@ next_queries.each do |(login, end_cursor)|
     }"
   }
 
-  response = RestClient.post url, payload.to_json, {'Authorization' => "bearer #{token}"}
+  response = graphql_request(payload)
 
-  puts "Auxiallary request for #{login} has responded with code: #{response.code}"
+  @logger.info("Auxiallary request for #{login} has responded with code: #{response.code}")
 
   graphql_response_json = JSON.parse(response.body)
   repo_edges = graphql_response_json["data"]["user"]["repositories"]["edges"]
@@ -120,18 +141,22 @@ next_queries.each do |(login, end_cursor)|
   end
 end
 
-puts "We found #{concepts.count} instances of a .hrconcept"
+@logger.info("We found #{concepts.count} instances of a .hrconcept")
 
 require 'yaml'
 concepts.each do |concept|
 
-  concept_yaml = YAML.load(concept[:concept_config]['text'])
+  begin
+    concept_yaml = YAML.load(concept[:concept_config]['text'])
+  rescue => e
+    @logger.error("YAML for #{concept[:login]}/#{concept[:repo]} was unparseable, please edit and try again.")
+    next
+  end
 
   banner_sub_filter = if concept_yaml['banner']
                         "sub_filter <body> '<body><header style=\"background-color: #414042; height: 2rem; padding: 0.4rem; color: white;\"><img style=\"height: 2rem;\" src=\"https://d15zqjc70bk603.cloudfront.net/assets/brand/hr_logo_h_light-4cb402f22041c39699a752bd21aaa38ebd860b343ae20a5fe97342c8ec53f156.svg\"></img></header>';"
-
-
                       end
+
   concept[:concept_url] = "#{concept_yaml['name']}.hrcpt.online";
 
   nginx = <<~NGINX
@@ -162,5 +187,9 @@ end
 
 require 'erb'
 
-File.write('concepts.data', Marshal.dump(concepts))
+# Uncomment to save data to use when iterateing on erb file
+# File.write('concepts.data', Marshal.dump(concepts))
 File.write("/var/www/concepts.com/index.html", ERB.new(File.read('index.html.erb')).result(binding))
+
+# Should have a great index.html
+# Should have a great set of nginx files
