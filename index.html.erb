@@ -6,6 +6,12 @@
     <link rel="shortcut icon" href="https://hashrocket.com/favicon.ico">
     <title>Concepts - Hashrocket</title>
     <style>
+      :root {
+        --hr-red:   #af1e23;
+        --hr-black: #414042;
+        --hr-grey:  #c8c8c8;
+      }
+
       body {
         margin: 0;
         background-color: white;
@@ -30,7 +36,7 @@
         display: flex;
         flex-direction: column;
         flex: 1;
-        background-color: #c8c8c8;
+        background-color: var(--hr-grey);
         min-width: 16rem;
         max-width: 24rem;
         min-height: 8rem;
@@ -42,7 +48,7 @@
         font-family: Helvetica, "San Serif";
         font-size: 1.6em;
         font-weight: bold;
-        color: #af1e23;
+        color: var(--hr-red);
       }
 
       li div {
@@ -58,9 +64,13 @@
         display: inline;
       }
 
+      .repo a:link, .repo a:active, .repo a:visited, .repo a:hover, .repo a:focus {
+        color: var(--hr-red);
+      }
+
       a:link, a:active, a:visited, a:hover, a:focus {
         text-decoration: none;
-        color: #414042;
+        color: var(--hr-black);
       }
 
     </style>
@@ -85,7 +95,7 @@
               <%= concept_yaml['description'] %>
             </div>
             <div class='repo'>
-              <a href="<%= "https://github.com/#{concept[:login]}/#{concept[:repo]}" %>">
+              <a href="<%= "https://github.com/#{concept[:login]}/#{concept[:repo_name]}" %>">
                 github
               </a>
             </div>
