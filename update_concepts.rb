@@ -46,6 +46,7 @@ payload = {
                 edges {
                   node {
                     name
+                    isFork
                     object(expression: \"master:.hrconcept\") {
                       ... on Blob {
                         text
@@ -88,7 +89,7 @@ member_edges.each do |member_edge|
     repo_name = repo_edge["node"]["name"]
     repo_concept_config = repo_edge["node"]["object"]
 
-    if repo_concept_config != nil
+    if repo_concept_config != nil && !repo_edge["node"]["isFork"]
       concepts << {
         login: login,
         repo_name: repo_name,
