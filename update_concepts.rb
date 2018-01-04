@@ -161,7 +161,7 @@ concepts.each do |concept|
                         BANNER_FILTER
                       end
 
-  `"/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome" --headless --disable-gpu --screenshot --window-size=900,600 #{concept_yaml['url']}`
+  `#{ENV.fetch('GOOGLE_CHROME_APP')} --headless --disable-gpu --screenshot --window-size=900,600 #{concept_yaml['url']}`
 
   require 'fileutils'
   FileUtils.mkdir_p("/var/www/concepts.com/images/")
