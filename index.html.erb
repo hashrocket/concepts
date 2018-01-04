@@ -35,7 +35,7 @@
       li {
         display: flex;
         flex-direction: column;
-        flex: 1;
+        flex: 0 1 0;
         background-color: var(--hr-grey);
         min-width: 16rem;
         max-width: 24rem;
@@ -53,6 +53,15 @@
 
       li div {
         min-height: 1.8rem;
+      }
+
+      li div.image {
+        display: flex;
+        justify-content: center;
+      }
+
+      li div.image img {
+        max-height: 10rem;
       }
 
       li div.title { 
@@ -83,6 +92,9 @@
         <% concepts.each do |concept| %>
         <% concept_yaml = YAML.load(concept[:concept_config]['text']) %>
           <li>
+            <div class='image'>
+              <img src='images/<%= concept_yaml['name'] %>.png'/>
+            </div>
             <div class='title'>
               <p>
                 <a href="http://<%= concept[:concept_url] %>">

@@ -161,6 +161,11 @@ concepts.each do |concept|
                         BANNER_FILTER
                       end
 
+  `"/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome" --headless --disable-gpu --screenshot --window-size=900,600 #{concept_yaml['url']}`
+
+  require 'fileutils'
+  FileUtils.mkdir_p("/var/www/concepts.com/images/")
+  FileUtils.mv('./screenshot.png', "/var/www/concepts.com/images/#{concept_yaml['name']}.png" )
   concept[:concept_url] = "#{concept_yaml['name']}.hrcpt.online";
 
   nginx = <<~NGINX
@@ -189,7 +194,6 @@ concepts.each do |concept|
   File.write("./nginx/#{concept_yaml['name']}", nginx)
 end
 
-require 'erb'
 
 # Uncomment to save data to use when iterateing on erb file
 # File.write('concepts.data', Marshal.dump(concepts))
