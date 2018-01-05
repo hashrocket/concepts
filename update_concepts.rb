@@ -167,6 +167,7 @@ concepts.each do |concept|
   require 'fileutils'
   FileUtils.mkdir_p("/var/www/concepts.com/images/")
   FileUtils.mv('./screenshot.png', "/var/www/concepts.com/images/#{concept_yaml['name']}.png" )
+  File.chmod(0444, "/var/www/concepts.com/images/#{concept_yaml['name']}.png")
   concept[:concept_url] = "#{concept_yaml['name']}.hrcpt.online";
 
   nginx = <<~NGINX
