@@ -145,7 +145,12 @@ end
 
 @logger.info("We found #{concepts.count} instances of a .hrconcept")
 
+root_domain = ENV.fetch("ROOT_DOMAIN", "hrcpt.online")
+root_domain_port = ENV["ROOT_DOMAIN_PORT"]
+fqdn = [root_domain, root_domain_port].compact.join(?:)
+
 header = File.read('header.html')
+
 FileUtils.cp('header.html', "/var/www/concepts.com/" )
 concepts.each do |concept|
 
@@ -158,7 +163,7 @@ concepts.each do |concept|
 
   banner_sub_filter = if concept_yaml['banner']
                         <<~BANNER_FILTER
-                        sub_filter <body> '<body><iframe seamless=\"seamless\" style=\"width: 100%; height: 50px; border: none;\" src="http://dev.hrcpt.online:8000/header.html">#{header}</iframe><div style=\"position: relative;\">';
+                        sub_filter <body> '<body><iframe seamless=\"seamless\" style=\"width: 100%; height: 50px; border: none;\" src="http://#{fqdn}/header.html">#{header}</iframe><div style=\"position: relative;\">';
                         sub_filter </body> '</div></body>';
                         BANNER_FILTER
                       end
@@ -169,12 +174,12 @@ concepts.each do |concept|
   FileUtils.mkdir_p("/var/www/concepts.com/images/")
   FileUtils.mv('./screenshot.png', "/var/www/concepts.com/images/#{concept_yaml['name']}.png" )
   File.chmod(0444, "/var/www/concepts.com/images/#{concept_yaml['name']}.png")
-  concept[:concept_url] = "#{concept_yaml['name']}.hrcpt.online";
+  concept[:concept_url] = "#{concept_yaml['name']}.#{root_domain}";
 
   nginx = <<~NGINX
   # this is an auto-generated from #{__FILE__}
   server {
-    listen 80;
+    listen #{root_domain_port || 80};
 
     server_name #{concept[:concept_url]};
 
