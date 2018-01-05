@@ -5,6 +5,8 @@ require 'logger'
 require 'yaml'
 require 'erb'
 
+Bundler.require                    # defaults to all groups
+
 @logger = Logger.new(File.open('/var/log/hr_concepts.log', File::WRONLY | File::APPEND), 'weekly')
 @logger.info('Starting Update Concepts')
 
@@ -15,8 +17,6 @@ at_exit do
     @logger.info('Ending Update Concepts')
   end
 end
-
-Bundler.require                    # defaults to all groups
 
 @url = 'https://api.github.com/graphql'
 @token = File.read('graphql.token').strip
@@ -145,7 +145,8 @@ end
 
 @logger.info("We found #{concepts.count} instances of a .hrconcept")
 
-header = ERB.new(File.read('header.html.erb')).result(binding)
+header = File.read('header.html')
+FileUtils.cp('header.html', "/var/www/concepts.com/" )
 concepts.each do |concept|
 
   begin
@@ -157,8 +158,8 @@ concepts.each do |concept|
 
   banner_sub_filter = if concept_yaml['banner']
                         <<~BANNER_FILTER
-                        sub_filter <body> '<body>#{header}<div style=\"position: relative;\">';
-                        sub_filter </body> '</div>></body>';
+                        sub_filter <body> '<body><iframe seamless=\"seamless\" style=\"width: 100%; height: 50px; border: none;\" src="http://dev.hrcpt.online:8000/header.html">#{header}</iframe><div style=\"position: relative;\">';
+                        sub_filter </body> '</div></body>';
                         BANNER_FILTER
                       end
 
@@ -171,6 +172,7 @@ concepts.each do |concept|
   concept[:concept_url] = "#{concept_yaml['name']}.hrcpt.online";
 
   nginx = <<~NGINX
+  # this is an auto-generated from #{__FILE__}
   server {
     listen 80;
 
@@ -186,7 +188,7 @@ concepts.each do |concept|
       proxy_set_header X-Forwarded-Proto http;
     }
 
-    sub_filter '</head>' '<script>analytics</script></head>';
+    sub_filter '</head>' '<script>window.addEventListener("message", function(e) { if (window.origin !== e.origin) {window.location = e.data;}})</script></head>';
     #{banner_sub_filter}
   }
   NGINX

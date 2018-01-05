@@ -1,0 +1,51 @@
+<!-- because this html snippet is used in an nginx sub filter, please use only "double quotes" -->
+<style>
+  body {
+    margin: 0;
+  }
+
+  .hrconcepts-header {
+    background-color: #414042;
+    height: 2rem;
+    padding: 0.4rem;
+    color: white;
+
+    display: flex;
+    align-items: center;
+  }
+
+  .hrconcepts-header img {
+    height: 1.6rem;
+  }
+
+  .hrconcepts-header span.title {
+    margin-top: 0.4rem;
+  }
+
+  .hrconcepts-header span.title a {
+    color: white;
+  }
+</style>
+
+<header class="hrconcepts-header">
+  <a id="hashrocket" href="https://hashrocket.com" target="_blank" rel="noopener noreferrer">
+    <img src="https://d15zqjc70bk603.cloudfront.net/assets/brand/hr_logo_h_light-4cb402f22041c39699a752bd21aaa38ebd860b343ae20a5fe97342c8ec53f156.svg">
+  </a>
+  <span class="title">
+    <a id="hrcpt" href="http://hrcpt.online" target="_blank" rel="noopener noreferrer">
+      Concepts
+    </a>
+  </span>
+</header>
+
+<script>
+  (function() {
+    var visitOnParent = function(e) {
+      e.preventDefault();
+      parent.postMessage(e.currentTarget.href, "*");
+    };
+
+    document.getElementById("hashrocket").addEventListener("click", visitOnParent);
+    document.getElementById("hrcpt").addEventListener("click", visitOnParent);
+  })();
+</script>
