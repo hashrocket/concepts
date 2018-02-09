@@ -13,13 +13,28 @@ ROOT_DOMAIN = ENV.fetch("ROOT_DOMAIN", "hrcpt.online")
 ROOT_DOMAIN_PORT = ENV["ROOT_DOMAIN_PORT"]
 ROOT_DOMAIN_URL = [ROOT_DOMAIN, ROOT_DOMAIN_PORT].compact.join(?:)
 HEADER = File.read('header.html')
+LOG_PATH = '/var/log/hr_concepts.log'
+NGINX_DIR = './nginx'
+WWW_DIR = '/var/www/concepts.com'
+
+if ARGV[0] == 'clean'
+  puts "Removing #{LOG_PATH}"
+  FileUtils.rm_f(LOG_PATH)
+  puts "Removing #{NGINX_DIR}"
+  FileUtils.rm_rf(NGINX_DIR)
+  puts "Removing #{WWW_DIR}"
+  FileUtils.rm_rf(WWW_DIR)
+  exit(0)
+end
 
 def logger
   @logger
 end
 
 def setup_logging
-  @logger = Logger.new(File.open('/var/log/hr_concepts.log', File::WRONLY | File::APPEND), 'weekly')
+  FileUtils.touch(LOG_PATH)
+
+  @logger = Logger.new(File.open(LOG_PATH, File::WRONLY | File::APPEND), 'weekly')
   @logger.info('Starting Update Concepts')
 end
 
@@ -188,7 +203,7 @@ def get_nginx_config(concept_yaml, concept)
 end
 
 def get_concept_screenshot(concept_yaml)
-  screenshot_path = "/var/www/concepts.com/images/#{concept_yaml['name']}.png"
+  screenshot_path = "#{WWW_DIR}/images/#{concept_yaml['name']}.png"
 
   get_screenshot = if File.exists?(screenshot_path)
                      time_since_screenshot = Time.new - File.mtime(screenshot_path)
@@ -225,9 +240,10 @@ concepts += retrieve_second_page_concepts(next_queries)
 
 logger.info("We found #{concepts.count} instances of a .hrconcept")
 
-FileUtils.cp('header.html', "/var/www/concepts.com/" )
-FileUtils.mkdir_p('nginx')
-FileUtils.mkdir_p("/var/www/concepts.com/images/")
+FileUtils.mkdir_p("#{WWW_DIR}")
+FileUtils.cp('header.html', "#{WWW_DIR}/" )
+FileUtils.mkdir_p(NGINX_DIR)
+FileUtils.mkdir_p("#{WWW_DIR}/images/")
 
 valid_concepts = concepts.map do |concept|
   parse_hrconcept_yaml(concept[:concept_config]['text']) do |concept_yaml|
@@ -236,7 +252,7 @@ valid_concepts = concepts.map do |concept|
 
     concept[:concept_url] = "#{concept_yaml['name']}.#{ROOT_DOMAIN}";
 
-    File.write("./nginx/#{concept_yaml['name']}", concept_nginx)
+    File.write("#{NGINX_DIR}/#{concept_yaml['name']}", concept_nginx)
 
     concept
   end
@@ -244,7 +260,7 @@ end.compact
 
 # Uncomment to save data to use when iterateing on erb file
 # File.write('concepts.data', Marshal.dump(concepts))
-File.write("/var/www/concepts.com/index.html", ERB.new(File.read('index.html.erb')).result(binding))
+File.write("#{WWW_DIR}/index.html", ERB.new(File.read('index.html.erb')).result(binding))
 
 # Should have a great index.html
 # Should have a great set of nginx files
