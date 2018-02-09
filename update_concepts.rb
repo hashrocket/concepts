@@ -8,30 +8,43 @@ require 'fileutils'
 
 Bundler.require                    # defaults to all groups
 
-@logger = Logger.new(File.open('/var/log/hr_concepts.log', File::WRONLY | File::APPEND), 'weekly')
-@logger.info('Starting Update Concepts')
+GITHUB_API_TOKEN = File.read('graphql.token').strip
+ROOT_DOMAIN = ENV.fetch("ROOT_DOMAIN", "hrcpt.online")
+ROOT_DOMAIN_PORT = ENV["ROOT_DOMAIN_PORT"]
+ROOT_DOMAIN_URL = [ROOT_DOMAIN, ROOT_DOMAIN_PORT].compact.join(?:)
+HEADER = File.read('header.html')
 
-at_exit do
-  if $!
-    @logger.error("Uncaught Error: #{$!.message}")
-  else
-    @logger.info('Ending Update Concepts')
+def logger
+  @logger
+end
+
+def setup_logging
+  @logger = Logger.new(File.open('/var/log/hr_concepts.log', File::WRONLY | File::APPEND), 'weekly')
+  @logger.info('Starting Update Concepts')
+end
+
+def setup_exit
+  at_exit do
+    if $!
+      logger.error("Uncaught Error: #{$!.message}")
+    else
+      logger.info('Ending Update Concepts')
+    end
   end
 end
 
-@url = 'https://api.github.com/graphql'
-@token = File.read('graphql.token').strip
-
 def graphql_request(payload)
-  @logger.info('request')
-  RestClient.post @url, payload.to_json, {'Authorization' => "bearer #{@token}"}
+  logger.info('request')
+  url = 'https://api.github.com/graphql'
+  RestClient.post url, payload.to_json, {'Authorization' => "bearer #{GITHUB_API_TOKEN}"}
 rescue => e
-  @logger.error(e.message)
+  logger.error(e.message)
   exit(1)
 end
 
-payload = {
-  "query": "query {
+def make_initial_github_request
+  payload = {
+    "query": "query {
     organization(login: \"hashrocket\") {
       members(first:50) {
         edges {
@@ -39,7 +52,7 @@ payload = {
             ... on User {
               login
               name
-              repositories(first:100) {
+              repositories(first:50) {
                 pageInfo {
                   endCursor
                   hasNextPage
@@ -62,136 +75,99 @@ payload = {
       }
     }
   }"
-}
+  }
 
-response = graphql_request(payload)
+  response = graphql_request(payload)
 
-@logger.info("Successful initial github query with code: #{response.code}")
+  logger.info("Successful initial github query with code: #{response.code}")
 
-graphql_response_json = JSON.parse(response.body)
-
-member_edges = graphql_response_json["data"]["organization"]["members"]["edges"]
-
-next_queries = []
-concepts = []
-
-member_edges.each do |member_edge|
-  login = member_edge["node"]["login"]
-  end_cursor = member_edge["node"]["repositories"]["pageInfo"]["endCursor"]
-  has_next_page = member_edge["node"]["repositories"]["pageInfo"]["hasNextPage"]
-
-  if has_next_page
-    next_queries << [login, end_cursor]
-  end
-
-  repo_edges = member_edge["node"]["repositories"]["edges"]
-
-  repo_edges.each do |repo_edge|
-    repo_name = repo_edge["node"]["name"]
-    repo_concept_config = repo_edge["node"]["object"]
-
-    if repo_concept_config != nil && !repo_edge["node"]["isFork"]
-      concepts << {
-        login: login,
-        repo_name: repo_name,
-        concept_config: repo_concept_config
-      }
-    end
-  end
+  JSON.parse(response.body)
 end
 
-next_queries.each do |(login, end_cursor)|
-  payload = {
-    "query": "query {
-      user(login: \"#{login}\") {
-        repositories(first: 100, after: \"#{end_cursor}\") {
-          pageInfo {
-            hasNextPage
-          }
-          edges {
-            node {
-              name
-              object(expression: \"master:.hrconcept\") {
-                ... on Blob {
-                  text
+def retrieve_concepts_from_initial_query(graphql_response_json)
+  member_edges = graphql_response_json["data"]["organization"]["members"]["edges"]
+
+  next_queries = []
+
+  concepts = member_edges.reduce([]) do |coll, member_edge|
+    login = member_edge["node"]["login"]
+    end_cursor = member_edge["node"]["repositories"]["pageInfo"]["endCursor"]
+    has_next_page = member_edge["node"]["repositories"]["pageInfo"]["hasNextPage"]
+
+    if has_next_page
+      next_queries << [login, end_cursor]
+    end
+
+    repo_edges = member_edge["node"]["repositories"]["edges"]
+
+    coll + parse_repo_edges(repo_edges, login)
+  end
+
+  return next_queries, concepts
+end
+
+def retrieve_second_page_concepts(next_queries)
+  next_queries.reduce([]) do |coll, (login, end_cursor)|
+    payload = {
+      "query": "query {
+        user(login: \"#{login}\") {
+          repositories(first: 100, after: \"#{end_cursor}\") {
+            pageInfo {
+              hasNextPage
+            }
+            edges {
+              node {
+                name
+                object(expression: \"master:.hrconcept\") {
+                  ... on Blob {
+                    text
+                  }
                 }
               }
             }
           }
         }
-      }
-    }"
-  }
+      }"
+    }
 
-  response = graphql_request(payload)
+    response = graphql_request(payload)
 
-  @logger.info("Auxiallary request for #{login} has responded with code: #{response.code}")
+    logger.info("Auxiallary request for #{login} has responded with code: #{response.code}")
 
-  graphql_response_json = JSON.parse(response.body)
-  repo_edges = graphql_response_json["data"]["user"]["repositories"]["edges"]
+    graphql_response_json = JSON.parse(response.body)
+    repo_edges = graphql_response_json["data"]["user"]["repositories"]["edges"]
 
-  repo_edges.each do |repo_edge|
+    coll + parse_repo_edges(repo_edges, login)
+  end
+end
+
+def parse_repo_edges(repo_edges, login)
+  repo_edges.map do |repo_edge|
     repo_name = repo_edge["node"]["name"]
     repo_concept_config = repo_edge["node"]["object"]
 
-    if repo_concept_config != nil
-      concepts << {
+    if repo_concept_config != nil && !repo_edge["node"]["isFork"]
+      {
         login: login,
         repo_name: repo_name,
         concept_config: repo_concept_config
       }
     end
-  end
+  end.compact
 end
 
-@logger.info("We found #{concepts.count} instances of a .hrconcept")
-
-root_domain = ENV.fetch("ROOT_DOMAIN", "hrcpt.online")
-root_domain_port = ENV["ROOT_DOMAIN_PORT"]
-fqdn = [root_domain, root_domain_port].compact.join(?:)
-
-header = File.read('header.html')
-
-FileUtils.cp('header.html', "/var/www/concepts.com/" )
-concepts.each do |concept|
-
-  begin
-    concept_yaml = YAML.load(concept[:concept_config]['text'])
-  rescue => e
-    @logger.error("YAML for #{concept[:login]}/#{concept[:repo]} was unparseable, please edit and try again.")
-    next
-  end
-
+def get_nginx_config(concept_yaml, concept)
   banner_sub_filter = if concept_yaml['banner']
                         <<~BANNER_FILTER
-                        sub_filter <body> '<body><iframe seamless=\"seamless\" style=\"width: 100%; height: 50px; border: none;\" src="http://#{fqdn}/header.html">#{header}</iframe><div style=\"position: relative;\">';
+                        sub_filter <body> '<body><iframe seamless=\"seamless\" style=\"width: 100%; height: 50px; border: none;\" src="http://#{ROOT_DOMAIN_URL}/header.html">#{HEADER}</iframe><div style=\"position: relative;\">';
                         sub_filter </body> '</div></body>';
                         BANNER_FILTER
                       end
 
-
-  screenshot_path = "/var/www/concepts.com/images/#{concept_yaml['name']}.png"
-
-  get_screenshot = if File.exists?(screenshot_path)
-                     time_since_screenshot = Time.new - File.mtime(screenshot_path)
-                     time_since_screenshot > 60 * 60 * 24 * 2
-                   else
-                     true
-                   end
-
-  if get_screenshot
-    `#{ENV.fetch('GOOGLE_CHROME_APP')} --headless --disable-gpu --screenshot --window-size=900,600 #{concept_yaml['url']}`
-    FileUtils.mkdir_p("/var/www/concepts.com/images/")
-    FileUtils.mv('./screenshot.png', screenshot_path)
-    File.chmod(0444, screenshot_path)
-  end
-
-  concept[:concept_url] = "#{concept_yaml['name']}.#{root_domain}";
-
-  nginx = <<~NGINX
+  <<~NGINX
   # this is an auto-generated from #{__FILE__}
   server {
-    listen #{root_domain_port || 80};
+    listen #{ROOT_DOMAIN_PORT || 80};
 
     server_name #{concept[:concept_url]};
 
@@ -209,12 +185,62 @@ concepts.each do |concept|
     #{banner_sub_filter}
   }
   NGINX
-
-  require 'fileutils'
-  FileUtils.mkdir_p('nginx')
-  File.write("./nginx/#{concept_yaml['name']}", nginx)
 end
 
+def get_concept_screenshot(concept_yaml)
+  screenshot_path = "/var/www/concepts.com/images/#{concept_yaml['name']}.png"
+
+  get_screenshot = if File.exists?(screenshot_path)
+                     time_since_screenshot = Time.new - File.mtime(screenshot_path)
+                     time_since_screenshot > 60 * 60 * 24 * 2
+                   else
+                     true
+                   end
+
+  if get_screenshot
+    `#{ENV.fetch('GOOGLE_CHROME_APP')} --headless --disable-gpu --screenshot --window-size=900,600 #{concept_yaml['url']}`
+    FileUtils.mv('./screenshot.png', screenshot_path)
+    File.chmod(0444, screenshot_path)
+  end
+end
+
+def parse_hrconcept_yaml(yaml_text, &block)
+  begin
+    concept_yaml = YAML.load(yaml_text)
+    block.call(concept_yaml)
+  rescue Psych::SyntaxError => e
+    logger.error("YAML for #{concept[:login]}/#{concept[:repo]} was unparseable, please edit and try again.")
+    nil
+  end
+end
+
+setup_logging
+setup_exit
+
+graphql_response_json = make_initial_github_request
+
+next_queries, concepts = retrieve_concepts_from_initial_query(graphql_response_json)
+
+concepts += retrieve_second_page_concepts(next_queries)
+
+logger.info("We found #{concepts.count} instances of a .hrconcept")
+
+FileUtils.cp('header.html', "/var/www/concepts.com/" )
+FileUtils.mkdir_p('nginx')
+FileUtils.mkdir_p("/var/www/concepts.com/images/")
+
+valid_concepts = concepts.map do |concept|
+  parse_hrconcept_yaml(concept[:concept_config]['text']) do |concept_yaml|
+    concept_nginx = get_nginx_config(concept_yaml, concept)
+    get_concept_screenshot(concept_yaml)
+
+    concept[:concept_url] = "#{concept_yaml['name']}.#{ROOT_DOMAIN}";
+
+    File.write("./nginx/#{concept_yaml['name']}", concept_nginx)
+
+    concept
+  end
+end.compact
 
 # Uncomment to save data to use when iterateing on erb file
 # File.write('concepts.data', Marshal.dump(concepts))
