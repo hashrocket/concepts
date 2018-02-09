@@ -4,6 +4,7 @@ require 'json'
 require 'logger'
 require 'yaml'
 require 'erb'
+require 'fileutils'
 
 Bundler.require                    # defaults to all groups
 
@@ -168,12 +169,23 @@ concepts.each do |concept|
                         BANNER_FILTER
                       end
 
-  `#{ENV.fetch('GOOGLE_CHROME_APP')} --headless --disable-gpu --screenshot --window-size=900,600 #{concept_yaml['url']}`
 
-  require 'fileutils'
-  FileUtils.mkdir_p("/var/www/concepts.com/images/")
-  FileUtils.mv('./screenshot.png', "/var/www/concepts.com/images/#{concept_yaml['name']}.png" )
-  File.chmod(0444, "/var/www/concepts.com/images/#{concept_yaml['name']}.png")
+  screenshot_path = "/var/www/concepts.com/images/#{concept_yaml['name']}.png"
+
+  get_screenshot = if File.exists?(screenshot_path)
+                     time_since_screenshot = Time.new - File.mtime(screenshot_path)
+                     time_since_screenshot > 60 * 60 * 24 * 2
+                   else
+                     true
+                   end
+
+  if get_screenshot
+    `#{ENV.fetch('GOOGLE_CHROME_APP')} --headless --disable-gpu --screenshot --window-size=900,600 #{concept_yaml['url']}`
+    FileUtils.mkdir_p("/var/www/concepts.com/images/")
+    FileUtils.mv('./screenshot.png', screenshot_path)
+    File.chmod(0444, screenshot_path)
+  end
+
   concept[:concept_url] = "#{concept_yaml['name']}.#{root_domain}";
 
   nginx = <<~NGINX
