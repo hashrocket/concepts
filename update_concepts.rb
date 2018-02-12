@@ -15,6 +15,7 @@ ROOT_DOMAIN_URL = [ROOT_DOMAIN, ROOT_DOMAIN_PORT].compact.join(?:)
 HEADER = File.read('header.html')
 LOG_PATH = '/var/log/hr_concepts.log'
 NGINX_DIR = './nginx'
+NGINX_DIR_TMP = './nginx_tmp'
 WWW_DIR = '/var/www/concepts.com'
 
 if ARGV[0] == 'clean'
@@ -22,6 +23,8 @@ if ARGV[0] == 'clean'
   FileUtils.rm_f(LOG_PATH)
   puts "Removing #{NGINX_DIR}"
   FileUtils.rm_rf(NGINX_DIR)
+  puts "Removing #{NGINX_DIR_TMP}"
+  FileUtils.rm_rf(NGINX_DIR_TMP)
   puts "Removing #{WWW_DIR}"
   FileUtils.rm_rf(WWW_DIR)
   exit(0)
@@ -243,6 +246,8 @@ logger.info("We found #{concepts.count} instances of a .hrconcept")
 FileUtils.mkdir_p("#{WWW_DIR}")
 FileUtils.cp('header.html', "#{WWW_DIR}/" )
 FileUtils.mkdir_p(NGINX_DIR)
+FileUtils.mkdir_p(NGINX_DIR_TMP)
+FileUtils.rm_f("#{NGINX_DIR_TMP}/*")
 FileUtils.mkdir_p("#{WWW_DIR}/images/")
 
 valid_concepts = concepts.map do |concept|
@@ -252,11 +257,14 @@ valid_concepts = concepts.map do |concept|
 
     concept[:concept_url] = "#{concept_yaml['name']}.#{ROOT_DOMAIN}";
 
-    File.write("#{NGINX_DIR}/#{concept_yaml['name']}", concept_nginx)
+    File.write("#{NGINX_DIR_TMP}/#{concept_yaml['name']}", concept_nginx)
 
     concept
   end
 end.compact
+
+FileUtils.rm_f(Dir.glob("#{NGINX_DIR}/*"))  # <--------- If the .hrconcept file or repo is removed, make sure its taken down from hrconcepts
+FileUtils.cp_r(Dir.glob("#{NGINX_DIR_TMP}/*"), "#{NGINX_DIR}")
 
 # Uncomment to save data to use when iterateing on erb file
 # File.write('concepts.data', Marshal.dump(concepts))
