@@ -1,0 +1,107 @@
+.App {
+  display: grid;
+  grid-template-rows: repeat(auto-fit, minmax(40px, 1fr));
+  grid-template-areas: "header" "nav" "concepts" "footer"; }
+
+.App-header {
+  background-color: rgba(46, 170, 212, 0.1);
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-content: baseline;
+  color: white;
+  padding: 0.8vh 1vw;
+  grid-area: header;
+  border-bottom: 1px solid #2389ac; }
+  .App-header .hr-container {
+    display: flex; }
+  .App-header h2 {
+    margin: 0;
+    align-self: flex-end; }
+  .App-header h2 a.hr {
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.4rem 0 0rem 1.6rem;
+    text-transform: uppercase;
+    color: #082736;
+    letter-spacing: .1em;
+    font-weight: 900;
+    font-size: 60%;
+    line-height: 2;
+    color: #ae1f23;
+    background: url(https://d15zqjc70bk603.cloudfront.net/assets/brand/hr_logo_icon-81c617c883074d68d44a316868516dc57b3c22eebb0dd3625da85895e554d7fb.svg) left 55% no-repeat;
+    background-size: 1.2rem auto;
+    font-family: Raleway,"Helvetica Neue",Helvetica,sans-serif; }
+
+.concepts {
+  grid-area: concepts;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-self: center; }
+  .concepts .concept {
+    display: grid;
+    grid-gap: 2vmin 2rem;
+    grid-template-rows: 4rem minmax(50%, auto) 2rem;
+    grid-template-columns: 1fr 1fr;
+    padding: 1rem 0 0 0;
+    margin-top: 2vmin;
+    border-top: 1px dotted #999;
+    color: #175a70; }
+    .concepts .concept .image {
+      justify-self: right;
+      grid-row: 1 / span 3;
+      width: 50%; }
+      .concepts .concept .image img {
+        clip-path: polygon(0% 98%, 98% 98%, 98% 0, 0 0);
+        max-width: 100%;
+        height: auto; }
+    .concepts .concept .concept-heading {
+      display: flex;
+      align-items: last baseline;
+      width: 50%; }
+      .concepts .concept .concept-heading .title {
+        font-weight: 900;
+        font-size: calc(20pt + 1vw); }
+        .concepts .concept .concept-heading .title a:link {
+          text-decoration: inherit;
+          color: inherit; }
+        .concepts .concept .concept-heading .title a:visited {
+          text-decoration: inherit;
+          color: inherit; }
+        .concepts .concept .concept-heading .title.long {
+          font-size: calc(10pt + 1vw); }
+    .concepts .concept .description {
+      width: 50%;
+      background-color: #d7eff7;
+      padding: 1vmin;
+      border-top: 1px dashed #2389ac; }
+
+.nav {
+  grid-area: nav;
+  background-color: #fff;
+  display: flex;
+  justify-content: center; }
+  .nav .menu-item {
+    color: #196179;
+    padding: 0.1rem 1rem; }
+
+.footer {
+  background-color: lightgreen;
+  grid-area: footer; }
+
+@media (max-width: 500px) {
+  .nav {
+    display: none; }
+  .concepts .concept {
+    grid-gap: 0.1rem;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    justify-items: center; }
+    .concepts .concept .image {
+      justify-self: center; }
+    .concepts .concept .repo .link {
+      text-align: left; }
+    .concepts .concept .description {
+      width: 80%; } }
