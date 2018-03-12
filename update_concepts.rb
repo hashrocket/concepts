@@ -13,10 +13,11 @@ ROOT_DOMAIN = ENV.fetch("ROOT_DOMAIN", "hrcpt.online")
 ROOT_DOMAIN_PORT = ENV["ROOT_DOMAIN_PORT"]
 ROOT_DOMAIN_URL = [ROOT_DOMAIN, ROOT_DOMAIN_PORT].compact.join(?:)
 HEADER = File.read('header.html')
-LOG_PATH = '/var/log/hr_concepts.log'
+LOG_PATH = './log/hr_concepts.log'
 NGINX_DIR = './nginx'
 NGINX_DIR_TMP = './nginx_tmp'
-WWW_DIR = '/var/www/concepts.com'
+WWW_DIR = './www/concepts.com'
+CHROME_APP = ENV.fetch('GOOGLE_CHROME_APP')
 
 if ARGV[0] == 'clean'
   puts "Removing #{LOG_PATH}"
@@ -35,6 +36,7 @@ def logger
 end
 
 def setup_logging
+  FileUtils.mkdir_p('./log')
   FileUtils.touch(LOG_PATH)
 
   @logger = Logger.new(File.open(LOG_PATH, File::WRONLY | File::APPEND), 'weekly')
@@ -216,7 +218,7 @@ def get_concept_screenshot(concept_yaml)
                    end
 
   if get_screenshot
-    `#{ENV.fetch('GOOGLE_CHROME_APP')} --headless --disable-gpu --screenshot --window-size=900,600 #{concept_yaml['url']}`
+    `#{CHROME_APP} --headless --disable-gpu --screenshot --window-size=1200,900 #{concept_yaml['url']}`
     FileUtils.mv('./screenshot.png', screenshot_path)
     File.chmod(0444, screenshot_path)
   end
