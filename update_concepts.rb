@@ -268,6 +268,22 @@ end.compact
 FileUtils.rm_f(Dir.glob("#{NGINX_DIR}/*"))  # <--------- If the .hrconcept file or repo is removed, make sure its taken down from hrconcepts
 FileUtils.cp_r(Dir.glob("#{NGINX_DIR_TMP}/*"), "#{NGINX_DIR}")
 
+concepts_json = concepts.map do |concept|
+  concept_yaml = YAML.load(concept[:concept_config]['text'])
+  {
+    title: concept_yaml['name'],
+    github_url: "https://github.com/#{concept[:login]}/#{concept[:repo_name]}",
+    author: concept[:login],
+    description: concept_yaml['description'],
+    screenshot_url: "images/#{concept_yaml['name']}.png",
+    hrcpt_url: concept_yaml['url'],
+    author_url: "http://github.com/#{concept[:author]}"
+  }
+end
+
+File.write('concepts.json', concepts_json.to_json)
+
+
 # Uncomment to save data to use when iterateing on erb file
 # File.write('concepts.data', Marshal.dump(concepts))
 File.write("#{WWW_DIR}/index.html", ERB.new(File.read('index.html.erb')).result(binding))
