@@ -1,40 +1,38 @@
 import React, { Component } from 'react';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faGithub from '@fortawesome/fontawesome-free-brands/faGithub';
 
 class Concept extends Component {
-
-  longClass(title) {
-    if (title.length > 12) {
-      return 'long';
-    }
-  }
-
   render() {
-    const {concept} = this.props
+    const { concept } = this.props;
 
     return (
-      <li className='concept'>
+      <li className="concept">
         <div className="image">
-          <img src={`http://hrcpt.online/${concept.screenshot_url}`} alt='concept screenshot' />
+          <img
+            src={`http://hrcpt.online/${concept.screenshot_url}`}
+            alt="concept screenshot"
+          />
         </div>
         <div className="concept-heading">
-          <div className={ `title ${this.longClass(concept.title)}` }>
+          <div className="title">
             <a href="hrcpt_url">
               <span>{concept.title}</span>
             </a>
           </div>
-          <div className="author">
-            <a href={concept.author_url}>by {concept.author}</a>
+          <div className="repo">
+            <div className="link">
+              <FontAwesomeIcon icon={faGithub} size="lg" />
+            </div>
           </div>
         </div>
-        <div className="description" >
-          {concept.description}
+        <div className="author">
+          <a href={concept.author_url}>Chris Erin</a>
         </div>
-        <div className="repo">
-          <div className='link'>
-            <a href={concept.github_url}>
-              github
-            </a>
-          </div>
+        <div className="description">{concept.description}</div>
+        <div className="tech-stack">
+          <div className="pill">rails</div>
+          <div className="pill">react</div>
         </div>
       </li>
     );

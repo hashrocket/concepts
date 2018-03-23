@@ -1,15 +1,10 @@
-
 @media (max-width: 500px) {
-
   $size: 2px;
 
   @import "./Letters.scss";
-
 }
 @media (min-width: 900px) {
-
   $size: 4px;
 
   @import "./Letters.scss";
-
 }
