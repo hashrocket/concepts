@@ -27,7 +27,7 @@ class Concept extends Component {
           </div>
         </div>
         <div className="author">
-          <a href={concept.author_url}>Chris Erin</a>
+          <a href={concept.author_url}>{concept.full_name}</a>
         </div>
         <div className="description">{concept.description}</div>
         <div className="tech-stack">
