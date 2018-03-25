@@ -153,6 +153,7 @@ def retrieve_second_page_concepts(next_queries)
             edges {
               node {
                 name
+                isFork
                 object(expression: \"master:.hrconcept\") {
                   ... on Blob {
                     text
