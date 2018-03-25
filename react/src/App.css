@@ -101,9 +101,12 @@ html,
       text-decoration: none; }
     .concepts .concept .tech-stack {
       display: flex;
+      flex-flow: row wrap;
+      justify-content: flex-start;
       margin-top: auto;
       padding-top: 1rem; }
       .concepts .concept .tech-stack .pill {
+        margin: 0.2em 0;
         background: #c7c9f4;
         border-radius: 12px;
         color: #fff;

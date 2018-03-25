@@ -3,6 +3,14 @@ import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faGithub from '@fortawesome/fontawesome-free-brands/faGithub';
 
 class Concept extends Component {
+  renderLanguages(languages) {
+    return languages.map((lang) => {
+      return (
+        <div className="pill">{lang}</div>
+      )
+    })
+  }
+
   render() {
     const { concept } = this.props;
 
@@ -31,8 +39,7 @@ class Concept extends Component {
         </div>
         <div className="description">{concept.description}</div>
         <div className="tech-stack">
-          <div className="pill">rails</div>
-          <div className="pill">react</div>
+          { this.renderLanguages(concept.languages) }
         </div>
       </li>
     );

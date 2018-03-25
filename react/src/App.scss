@@ -142,10 +142,13 @@ html,
 
     .tech-stack {
       display: flex;
+      flex-flow: row wrap;
+      justify-content: flex-start;
       margin-top: auto;
       padding-top: 1rem;
 
       .pill {
+        margin: 0.2em 0;
         background: $pill-color;
         border-radius: 12px;
         color: $pill-text-color;
