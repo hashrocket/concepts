@@ -86,6 +86,11 @@ def make_initial_github_request
                         text
                       }
                     }
+                    languages(first:10) {
+                      nodes {
+                        name
+                      }
+                    }
                   }
                 }
               }
@@ -153,6 +158,11 @@ def retrieve_second_page_concepts(next_queries)
                     text
                   }
                 }
+                languages(first:10) {
+                  nodes {
+                    name
+                  }
+                }
               }
             }
           }
@@ -176,11 +186,14 @@ def parse_repo_edges(repo_edges, login)
     repo_name = repo_edge["node"]["name"]
     repo_concept_config = repo_edge["node"]["object"]
 
+    languages = repo_edge['node']['languages']['nodes'].map{|lang| lang['name']}
+
     if repo_concept_config != nil && !repo_edge["node"]["isFork"]
       {
         login: login,
         repo_name: repo_name,
-        concept_config: repo_concept_config
+        concept_config: repo_concept_config,
+        languages: languages
       }
     end
   end.compact
@@ -290,6 +303,7 @@ concepts_json = concepts.map do |concept|
     author: concept[:login],
     full_name: users_map[concept[:login]],
     description: concept_yaml['description'],
+    languages: concept[:languages],
     screenshot_url: "images/#{concept_yaml['name']}.png",
     hrcpt_url: concept_yaml['url'],
     author_url: "http://github.com/#{concept[:author]}"
