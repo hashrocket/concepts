@@ -16,7 +16,7 @@ class Concept extends Component {
         </div>
         <div className="concept-heading">
           <div className="title">
-            <a href="hrcpt_url">
+            <a href={concept.hrcpt_url}>
               <span>{concept.title}</span>
             </a>
           </div>
