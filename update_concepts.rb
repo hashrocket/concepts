@@ -258,7 +258,6 @@ def parse_hrconcept_yaml(yaml_text, &block)
   end
 end
 
-
 setup_logging
 setup_exit
 
