@@ -295,20 +295,19 @@ end.compact
 FileUtils.rm_f(Dir.glob("#{NGINX_DIR}/*"))  # <--------- If the .hrconcept file or repo is removed, make sure its taken down from hrconcepts
 FileUtils.cp_r(Dir.glob("#{NGINX_DIR_TMP}/*"), "#{NGINX_DIR}")
 
-
 concepts_json = concepts.map do |concept|
 
   concept_yaml = YAML.load(concept[:concept_config]['text'])
   {
     title: concept_yaml['name'],
-    github_url: "https://github.com/#{concept[:login]}/#{concept[:repo_name]}",
     author: concept[:login],
     full_name: users_map[concept[:login]],
     description: concept_yaml['description'],
     languages: concept[:languages],
     screenshot_url: "images/#{concept_yaml['name']}.png",
     hrcpt_url: concept_yaml['url'],
-    author_url: "http://github.com/#{concept[:author]}"
+    author_url: "http://github.com/#{concept[:author]}",
+    github_url: "https://github.com/#{concept[:login]}/#{concept[:repo_name]}",
   }
 end
 

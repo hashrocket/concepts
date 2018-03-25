@@ -30,7 +30,9 @@ class Concept extends Component {
           </div>
           <div className="repo">
             <div className="link">
-              <FontAwesomeIcon icon={faGithub} size="lg" />
+              <a href={concept.github_url}>
+                <FontAwesomeIcon icon={faGithub} size="lg" />
+              </a>
             </div>
           </div>
         </div>
