@@ -126,6 +126,16 @@ def retrieve_concepts_from_initial_query(graphql_response_json)
   return next_queries, concepts
 end
 
+def collect_users(graphql_response_json)
+  member_edges = graphql_response_json["data"]["organization"]["members"]["edges"]
+
+  member_edges.reduce({}) do |members_hash, member_edge|
+    login = member_edge["node"]["login"]
+    members_hash[login] = member_edge["node"]["name"]
+    members_hash
+  end
+end
+
 def retrieve_second_page_concepts(next_queries)
   next_queries.reduce([]) do |coll, (login, end_cursor)|
     payload = {
@@ -234,11 +244,13 @@ def parse_hrconcept_yaml(yaml_text, &block)
   end
 end
 
+
 setup_logging
 setup_exit
 
 graphql_response_json = make_initial_github_request
 
+users_map = collect_users(graphql_response_json)
 next_queries, concepts = retrieve_concepts_from_initial_query(graphql_response_json)
 
 concepts += retrieve_second_page_concepts(next_queries)
@@ -268,12 +280,15 @@ end.compact
 FileUtils.rm_f(Dir.glob("#{NGINX_DIR}/*"))  # <--------- If the .hrconcept file or repo is removed, make sure its taken down from hrconcepts
 FileUtils.cp_r(Dir.glob("#{NGINX_DIR_TMP}/*"), "#{NGINX_DIR}")
 
+
 concepts_json = concepts.map do |concept|
+
   concept_yaml = YAML.load(concept[:concept_config]['text'])
   {
     title: concept_yaml['name'],
     github_url: "https://github.com/#{concept[:login]}/#{concept[:repo_name]}",
     author: concept[:login],
+    full_name: users_map[concept[:login]],
     description: concept_yaml['description'],
     screenshot_url: "images/#{concept_yaml['name']}.png",
     hrcpt_url: concept_yaml['url'],
