@@ -22,39 +22,43 @@ html,
 
 .App-header {
   background-color: rgba(46, 170, 212, 0.1);
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  align-content: baseline;
-  color: white;
-  padding: 0.8vh 1vw;
   grid-area: header;
   border-bottom: 1px solid $drawing-blue;
 
-  .hr-container {
+  .header-title {
     display: flex;
-  }
+    width: 25rem;
+    margin: 0 auto;
+    flex-flow: column;
+    justify-content: center;
+    color: white;
+    padding: 0.8vh 1vw;
+    align-items: right;
 
-  h2 {
-    margin: 0;
-    align-self: flex-end;
-  }
+    .hr-container {
+      display: flex;
+    }
 
-  h2 a.hr {
-    text-decoration: none;
-    display: inline-block;
-    padding: 0.4rem 0 0rem 1.6rem;
-    text-transform: uppercase;
-    color: #082736;
-    letter-spacing: 0.1em;
-    font-weight: 900;
-    font-size: 60%;
-    line-height: 2;
-    color: #ae1f23;
-    background: url(https://d15zqjc70bk603.cloudfront.net/assets/brand/hr_logo_icon-81c617c883074d68d44a316868516dc57b3c22eebb0dd3625da85895e554d7fb.svg)
+    h2 {
+      margin: 0;
+    }
+
+    h2 a.hr {
+      text-decoration: none;
+      display: inline-block;
+      padding: 0.4rem 0 0rem 1.6rem;
+      text-transform: uppercase;
+      color: #082736;
+      letter-spacing: 0.1em;
+      font-weight: 900;
+      font-size: 60%;
+      line-height: 2;
+      color: #ae1f23;
+      background: url(https://d15zqjc70bk603.cloudfront.net/assets/brand/hr_logo_icon-81c617c883074d68d44a316868516dc57b3c22eebb0dd3625da85895e554d7fb.svg)
       left 55% no-repeat;
-    background-size: 1.2rem auto;
-    font-family: Raleway, "Helvetica Neue", Helvetica, sans-serif;
+      background-size: 1.2rem auto;
+      font-family: Raleway, "Helvetica Neue", Helvetica, sans-serif;
+    }
   }
 }
 

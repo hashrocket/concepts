@@ -46,11 +46,13 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <Lettering />
-          <div className="hr-container">
-            <h2>
-              <a href="https://hashrocket.com" class="hr">A Hashrocket project</a>
-            </h2>
+          <div className="header-title">
+            <Lettering />
+            <div className="hr-container">
+              <h2>
+                <a href="https://hashrocket.com" class="hr">A Hashrocket project</a>
+              </h2>
+            </div>
           </div>
         </header>
         <nav className="nav">
