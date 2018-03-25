@@ -5,6 +5,13 @@ $pill-text-color: #fff;
 $bluey-blue: #64bfdf;
 $drawing-blue: darken(rgba(46, 170, 212, 1), 10%);
 
+@mixin pill {
+  background: $pill-color;
+  border-radius: 12px;
+  color: $pill-text-color;
+  padding: 0.2rem 0.7rem;
+}
+
 html,
 * {
   font-family: "Libre Franklin", sans-serif;
@@ -72,6 +79,14 @@ html,
   .menu-item {
     color: darken($drawing-blue, 12%);
     padding: 0.1rem 1rem;
+    cursor: pointer;
+
+    &:hover {
+      transition-duration: 0.2s;
+      margin-top: -0.2rem;
+      margin-right: 0.6rem;
+      @include pill
+    }
   }
 }
 
@@ -160,11 +175,9 @@ html,
 
       .pill {
         margin: 0.2em 0;
-        background: $pill-color;
-        border-radius: 12px;
-        color: $pill-text-color;
         margin-right: 0.5rem;
-        padding: 0.2rem 0.7rem;
+
+        @include pill
       }
     }
   }

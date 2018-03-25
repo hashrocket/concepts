@@ -107,10 +107,10 @@ html,
       padding-top: 1rem; }
       .concepts .concept .tech-stack .pill {
         margin: 0.2em 0;
+        margin-right: 0.5rem;
         background: #c7c9f4;
         border-radius: 12px;
         color: #fff;
-        margin-right: 0.5rem;
         padding: 0.2rem 0.7rem; }
 
 .footer {

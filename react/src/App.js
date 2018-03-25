@@ -7,11 +7,21 @@ import reverse from 'lodash/reverse';
 import take from 'lodash/take';
 
 class App extends Component {
+  constructor() {
+    super()
+
+    this.state = {currentTag: ""}
+  }
+
+  handleTagChange = (tag) => {
+    this.setState({currentTag: tag})
+  }
+
   renderTechNavs(concepts) {
     const results = this.filterMostUsedTechs(concepts);
 
     return results.map((result) => {
-      return <div className="menu-item">{result}</div>
+      return <div className="menu-item" onClick={ () => { this.handleTagChange(result) } }>{result}</div>
     });
   }
 
@@ -31,8 +41,6 @@ class App extends Component {
     const languages = Object.entries(results);
     const sortedLanguages = sortBy(languages, (languageCount) => { return languageCount[1]});
 
-    console.log('sorted', sortedLanguages);
-
     return take(reverse(sortedLanguages.map((t) => t[0])), 7);
   }
 
@@ -42,12 +50,22 @@ class App extends Component {
     )
   }
 
+  filterConceptsByTag(concepts) {
+    return concepts.filter((concept) => {
+      return concept.languages.find((lang) => {
+        return lang.match(this.state.currentTag)
+      })
+    })
+  }
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
           <div className="header-title">
-            <Lettering />
+            <a href='/'>
+              <Lettering />
+            </a>
             <div className="hr-container">
               <h2>
                 <a href="https://hashrocket.com" class="hr">A Hashrocket project</a>
@@ -59,7 +77,7 @@ class App extends Component {
           {this.renderTechNavs(this.props.concepts)}
         </nav>
         <ul className="concepts">
-          {this.renderConcepts(this.props.concepts)}
+          {this.renderConcepts(this.filterConceptsByTag(this.props.concepts))}
         </ul>
         <footer className="footer">
         </footer>
