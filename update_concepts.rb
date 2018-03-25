@@ -305,7 +305,7 @@ concepts_json = concepts.map do |concept|
     languages: concept[:languages],
     screenshot_url: "images/#{concept_yaml['name']}.png",
     hrcpt_url: concept_yaml['url'],
-    author_url: "http://github.com/#{concept[:author]}",
+    author_url: "http://github.com/#{concept[:login]}",
     github_url: "https://github.com/#{concept[:login]}/#{concept[:repo_name]}",
   }
 end
