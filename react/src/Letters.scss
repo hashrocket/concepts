@@ -2,6 +2,7 @@
   $col11: rgba(46, 170, 212, 0.7);
   $col2: rgba(100, 200, 100, 0.7);
   $col148: rgba(100, 237, 60, 0.8);
+  $size: 20px !default;
 
   @mixin border-sizes($t, $r, $b, $l){
     border-top-width: ($t * $size);
