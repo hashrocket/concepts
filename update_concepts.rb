@@ -312,11 +312,7 @@ concepts_json = concepts.map do |concept|
 end
 
 File.write('concepts.json', concepts_json.to_json)
-
+FileUtils.cp('concepts.json', "#{WWW_DIR}/" )
 
 # Uncomment to save data to use when iterateing on erb file
 # File.write('concepts.data', Marshal.dump(concepts))
-File.write("#{WWW_DIR}/index.html", ERB.new(File.read('index.html.erb')).result(binding))
-
-# Should have a great index.html
-# Should have a great set of nginx files
