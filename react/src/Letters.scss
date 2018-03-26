@@ -90,7 +90,7 @@
     background-color: transparent;
     border-style: solid;
     @include border-colors($transparent, $col11, $transparent, $transparent);
-    @include border-sizes(0, 13, 15, 0);
+    @include border-sizes(1, 13, 15, 0);
   }
 
   #shape4{
@@ -111,7 +111,7 @@
     background-color: transparent;
     border-style: solid;
     @include border-colors($transparent, $col148, $transparent, $transparent);
-    @include border-sizes(0, 9, 11, 0);
+    @include border-sizes(1, 9, 11, 0);
   }
 
   #shape6{
