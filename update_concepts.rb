@@ -279,10 +279,11 @@ FileUtils.mkdir_p("#{WWW_DIR}/images/")
 
 valid_concepts = concepts.map do |concept|
   parse_hrconcept_yaml(concept[:concept_config]['text']) do |concept_yaml|
+    concept[:concept_url] = "#{concept_yaml['name']}.#{ROOT_DOMAIN}"
+
     concept_nginx = get_nginx_config(concept_yaml, concept)
     get_concept_screenshot(concept_yaml)
 
-    concept[:concept_url] = "#{concept_yaml['name']}.#{ROOT_DOMAIN}"
     concept[:languages] += concept_yaml['technologies'] || []
 
     File.write("#{NGINX_DIR_TMP}/#{concept_yaml['name']}", concept_nginx)
