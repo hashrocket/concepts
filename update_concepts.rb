@@ -16,7 +16,7 @@ HEADER = File.read('header.html')
 LOG_PATH = './log/hr_concepts.log'
 NGINX_DIR = './nginx'
 NGINX_DIR_TMP = './nginx_tmp'
-WWW_DIR = './www/concepts.com'
+WWW_DIR = ENV['WWW_DIR'] || './www/concepts.com'
 CHROME_APP = ENV.fetch('GOOGLE_CHROME_APP')
 
 if ARGV[0] == 'clean'
