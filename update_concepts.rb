@@ -311,7 +311,7 @@ concepts_json = concepts.map do |concept|
   }
 end
 
-File.write('concepts.json', concepts_json.to_json)
+File.write('concepts.json', {data: concepts_json}.to_json)
 FileUtils.cp('concepts.json', "#{WWW_DIR}/" )
 
 # Uncomment to save data to use when iterateing on erb file
