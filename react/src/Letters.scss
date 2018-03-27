@@ -65,6 +65,7 @@
   }
 
   #shape2{
+    @include border-sizes(3, 3, 3, 3);
     @include size(9, 6);
     @include position(3, 4);
     @include radius(6, 6, 6, 6);
@@ -73,7 +74,6 @@
     background-color: transparent;
     border-style: solid;
     @include border-colors($col2, $col11, $col11, $col2);
-    @include border-sizes(3, 3, 3, 3);
   }
   #letter2 {
     @include size(18, 12);
