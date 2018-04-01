@@ -17,10 +17,12 @@ class Concept extends Component {
     return (
       <li className="concept">
         <div className="image">
-          <img
-            src={`http://hrcpt.online/${concept.screenshot_url}`}
-            alt="concept screenshot"
-          />
+          <a href={concept.hrcpt_url}>
+            <img
+              src={`http://hrcpt.online/${concept.screenshot_url}`}
+              alt="concept screenshot"
+            />
+          </a>
         </div>
         <div className="concept-heading">
           <div className="title">
