@@ -72,7 +72,7 @@ def make_initial_github_request
             ... on User {
               login
               name
-              repositories(first:50) {
+              repositories(first:75) {
                 pageInfo {
                   endCursor
                   hasNextPage
@@ -242,8 +242,7 @@ def get_concept_screenshot(concept_yaml)
                    end
 
   if get_screenshot
-    `#{CHROME_APP} --headless --disable-gpu --screenshot --window-size=1200,900 #{concept_yaml['url']}`
-    FileUtils.mv('./screenshot.png', screenshot_path)
+    `node screenshot.js #{concept_yaml['url']} #{screenshot_path}`
     File.chmod(0444, screenshot_path)
   end
 end
