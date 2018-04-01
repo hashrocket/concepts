@@ -87,6 +87,13 @@ html,
       margin-right: 0.6rem;
       @include pill
     }
+
+    &.selected {
+      transition-duration: 0.2s;
+      margin-top: -0.2rem;
+      margin-right: 0.6rem;
+      @include pill
+    }
   }
 }
 

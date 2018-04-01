@@ -21,7 +21,7 @@ class App extends Component {
     const results = this.filterMostUsedTechs(concepts);
 
     return results.map((result) => {
-      return <div className="menu-item" onClick={ () => { this.handleTagChange(result) } }>{result}</div>
+      return <div className={`menu-item ${this.state.currentTag === result ? 'selected' : ''}` } onClick={ () => { this.handleTagChange(result) } }>{result}</div>
     });
   }
 
