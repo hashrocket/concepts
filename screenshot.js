@@ -13,6 +13,6 @@ const jpgPath = process.argv[3];
   await page.setViewport({width: 1200, height: 900});
   await page.goto(url).catch((err) => { console.log(err); });
   await sleep(1000);
-  await page.screenshot({path: jpgPath});
+  await page.screenshot({path: jpgPath}).catch((err) => { console.log(err); });
   await browser.close();
 })();
