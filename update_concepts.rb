@@ -18,6 +18,7 @@ NGINX_DIR = './nginx'
 NGINX_DIR_TMP = './nginx_tmp'
 WWW_DIR = ENV['WWW_DIR'] || './www/concepts.com'
 CHROME_APP = ENV.fetch('GOOGLE_CHROME_APP')
+USER = ENV['CONCEPTS_USER'] || Etc.getlogin
 
 if ARGV[0] == 'clean'
   puts "Removing #{LOG_PATH}"
@@ -72,7 +73,7 @@ def make_initial_github_request
             ... on User {
               login
               name
-              repositories(first:75) {
+              repositories(first:50) {
                 pageInfo {
                   endCursor
                   hasNextPage
@@ -242,7 +243,21 @@ def get_concept_screenshot(concept_yaml)
                    end
 
   if get_screenshot
-    `node screenshot.js #{concept_yaml['url']} #{screenshot_path}`
+    if File.exists?(screenshot_path)
+      FileUtils.mv(screenshot_path, "#{screenshot_path}.bk")
+    end
+
+    command = "sudo -u #{USER} node screenshot.js #{concept_yaml['url']} #{screenshot_path}"
+    `#{command}`
+
+    unless File.exists?(screenshot_path)
+      if File.exists?("#{screenshot_path}.bk")
+        FileUtils.mv("#{screenshot_path}.bk", screenshot_path)
+      end
+    else
+      FileUtils.rm_f("#{screenshot_path}.bk")
+    end
+
     File.chmod(0444, screenshot_path)
   end
 end
