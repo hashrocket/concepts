@@ -12,6 +12,6 @@ if (process.env.NODE_ENV === 'production') {
     ReactDOM.render(<App concepts={concepts.data} />, document.getElementById('root'));
   })
 } else {
-  let concepts = conceptsFromFile;
+  let concepts = conceptsFromFile.data;
   ReactDOM.render(<App concepts={concepts} />, document.getElementById('root'));
 }
