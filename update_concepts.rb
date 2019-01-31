@@ -261,6 +261,8 @@ def get_concept_screenshot(concept_yaml)
     unless File.exists?(screenshot_path)
       if File.exists?("#{screenshot_path}.bk")
         FileUtils.mv("#{screenshot_path}.bk", screenshot_path)
+      else
+        logger.error("The screenshot path does not exist: #{screenshot_path}\nMaybe check that puppeteer is installed with npm")
       end
     else
       FileUtils.rm_f("#{screenshot_path}.bk")
