@@ -1,0 +1,24 @@
+{
+  "name": "concepts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "screenshot.js",
+  "dependencies": {
+    "puppeteer": "^1.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hashrocket/concepts.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hashrocket/concepts/issues"
+  },
+  "homepage": "https://github.com/hashrocket/concepts#readme"
+}
