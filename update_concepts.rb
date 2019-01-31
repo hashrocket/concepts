@@ -67,13 +67,13 @@ def make_initial_github_request
   payload = {
     "query": "query {
     organization(login: \"hashrocket\") {
-      members(first:50) {
+      members(first: 50) {
         edges {
           node {
             ... on User {
               login
               name
-              repositories(first:50) {
+              repositories(first:25) {
                 pageInfo {
                   endCursor
                   hasNextPage
@@ -149,6 +149,7 @@ def retrieve_second_page_concepts(next_queries)
         user(login: \"#{login}\") {
           repositories(first: 100, after: \"#{end_cursor}\") {
             pageInfo {
+              endCursor
               hasNextPage
             }
             edges {
@@ -177,9 +178,16 @@ def retrieve_second_page_concepts(next_queries)
     logger.info("Auxiallary request for #{login} has responded with code: #{response.code}")
 
     graphql_response_json = JSON.parse(response.body)
-    repo_edges = graphql_response_json["data"]["user"]["repositories"]["edges"]
+    repo_edges = graphql_response_json.dig("data", "user", "repositories", "edges")
 
-    coll + parse_repo_edges(repo_edges, login)
+    next_cursor = graphql_response_json.dig("data", "user", "repositories", "pageInfo", "endCursor")
+    next_page = graphql_response_json.dig("data", "user", "repositories", "pageInfo", "hasNextPage")
+
+    if next_page
+      next_coll = retrieve_second_page_concepts([[login, next_cursor]])
+    end
+
+    coll + (next_coll || []) + parse_repo_edges(repo_edges || [], login)
   end
 end
 
