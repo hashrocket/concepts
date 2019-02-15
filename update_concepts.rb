@@ -240,12 +240,14 @@ def get_nginx_config(concept_yaml, concept)
   NGINX
 end
 
+WHITE_IMAGE_OF_SPECIFIC_SIZE = "89283a7c5a1284bd6353384b5e86ea2fa282bbf8"
+
 def get_concept_screenshot(concept_yaml)
   screenshot_path = "#{WWW_DIR}/images/#{concept_yaml['name']}.png"
 
   get_screenshot = if File.exists?(screenshot_path)
                      time_since_screenshot = Time.new - File.mtime(screenshot_path)
-                     time_since_screenshot > 60 * 60 * 24 * 2
+                     (time_since_screenshot > 60 * 60 * 24 * 2) || `git hash-object #{screenshot_path}` == WHITE_IMAGE_OF_SPECIFIC_SIZE
                    else
                      true
                    end
