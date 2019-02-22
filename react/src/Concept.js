@@ -6,7 +6,7 @@ class Concept extends Component {
   renderLanguages(languages) {
     return languages.map((lang) => {
       return (
-        <div className="pill">{lang}</div>
+        <div className="pill" onClick={() => this.props.onPillClick(lang)}>{lang}</div>
       )
     })
   }

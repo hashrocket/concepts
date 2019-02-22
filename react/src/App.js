@@ -10,7 +10,7 @@ class App extends Component {
   constructor() {
     super()
 
-    this.state = {currentTag: ""}
+    this.state = {currentTag: "", modalDisplay: false}
   }
 
   handleTagChange = (tag) => {
@@ -45,8 +45,10 @@ class App extends Component {
   }
 
   renderConcepts(concepts) {
-    return concepts.map((concept) =>
-      <Concept concept={concept}/>
+    const sortedConcepts = sortBy(concepts, concept => new Date(concept.created_at));
+
+    return reverse(sortedConcepts).map((concept) =>
+      <Concept concept={concept} onPillClick={this.handleTagChange}/>
     )
   }
 
@@ -61,6 +63,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <Modal display={this.state.modalDisplay} closeModal={() => this.setState({modalDisplay: false})} />
         <header className="App-header">
           <div className="header-title">
             <a href='/'>
@@ -69,6 +72,7 @@ class App extends Component {
             <div className="hr-container">
               <h2>
                 <a href="https://hashrocket.com" class="hr">A Hashrocket project</a>
+                <div className="tag-line" onClick={() => this.setState({modalDisplay: true})}>A Gallery of Side Projects</div>
               </h2>
             </div>
           </div>
@@ -84,6 +88,19 @@ class App extends Component {
       </div>
     );
   }
+}
+
+const Modal = (props) => {
+  return (
+    <div className="modal" onClick={props.closeModal} style={{display: props.display ? "block" : "none"}}>
+      <div className="modal-content">
+        <h2>About</h2>
+        <p>
+        Concepts is a place for us to put our side projects on display. When learning a new technology we've found it's best to try and make something. These projects very often look like rough, incomplete ideas, but they represent a new frontier for a Hashrocketeer in our learning about programming.
+        </p>
+      </div>
+    </div>
+  );
 }
 
 export default App;

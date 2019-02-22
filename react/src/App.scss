@@ -17,6 +17,10 @@ html,
   font-family: "Libre Franklin", sans-serif;
 }
 
+body {
+  margin: 0;
+}
+
 .App {
   display: grid;
   grid-template-rows: repeat(auto-fit, minmax(40px, 1fr));
@@ -25,6 +29,27 @@ html,
     "nav"
     "concepts"
     "footer";
+}
+
+.modal {
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+
+  .modal-content {
+    width: 400px;
+    height: 200px;
+    margin: 0 auto;
+    position: relative;
+    top: 40%;
+    opacity: auto;
+    background-color: rgba(255, 255, 255, 1);
+    padding: 20px;
+  }
 }
 
 .App-header {
@@ -44,10 +69,21 @@ html,
 
     .hr-container {
       display: flex;
+      margin-left: -24px;
     }
 
     h2 {
       margin: 0;
+      color: black;
+      white-space: nowrap;
+
+      .tag-line {
+        cursor: pointer;
+        margin-left: 20px;
+        text-transform: capitalize;
+        display: inline-block;
+        font-size: 14px;
+      }
     }
 
     h2 a.hr {
@@ -183,6 +219,7 @@ html,
       .pill {
         margin: 0.2em 0;
         margin-right: 0.5rem;
+        cursor: pointer;
 
         @include pill
       }
