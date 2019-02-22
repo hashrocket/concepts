@@ -154,6 +154,7 @@ def retrieve_second_page_concepts(next_queries)
             }
             edges {
               node {
+                createdAt
                 name
                 isFork
                 object(expression: \"master:.hrconcept\") {
@@ -195,6 +196,7 @@ def parse_repo_edges(repo_edges, login)
   repo_edges.map do |repo_edge|
     repo_name = repo_edge["node"]["name"]
     repo_concept_config = repo_edge["node"]["object"]
+    repo_created_at = repo_edge["node"]["createdAt"]
 
     languages = repo_edge['node']['languages']['nodes'].map{|lang| lang['name']}
 
@@ -203,7 +205,8 @@ def parse_repo_edges(repo_edges, login)
         login: login,
         repo_name: repo_name,
         concept_config: repo_concept_config,
-        languages: languages
+        languages: languages,
+        created_at: repo_created_at
       }
     end
   end.compact
@@ -327,6 +330,7 @@ concepts_json = concepts.map do |concept|
   {
     title: concept_yaml['name'],
     author: concept[:login],
+    created_at: concept[:created_at],
     full_name: users_map[concept[:login]],
     description: concept_yaml['description'].strip,
     languages: concept[:languages],
