@@ -1,3 +1,10 @@
 *.css
 react/src/*.css
 node_modules/
+log/
+nginx/
+nginx_tmp/
+www/
+log/
+graphql.token
+concepts.json
