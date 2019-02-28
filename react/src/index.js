@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import conceptsFromFile from './concepts.json'
 
 if (process.env.NODE_ENV === 'production') {
   fetch('/concepts.json').then(function(response) {
@@ -11,6 +10,6 @@ if (process.env.NODE_ENV === 'production') {
     ReactDOM.render(<App concepts={concepts.data} />, document.getElementById('root'));
   })
 } else {
-  let concepts = conceptsFromFile.data;
+  let concepts = require('./concepts.json').data;
   ReactDOM.render(<App concepts={concepts} />, document.getElementById('root'));
 }
