@@ -88,6 +88,8 @@ def make_initial_github_request
                 }
                 edges {
                   node {
+                    createdAt
+                    description
                     name
                     isFork
                     object(expression: \"master:.hrconcept\") {
@@ -163,6 +165,7 @@ def retrieve_second_page_concepts(next_queries)
             edges {
               node {
                 createdAt
+                description
                 name
                 isFork
                 object(expression: \"master:.hrconcept\") {
@@ -205,6 +208,7 @@ def parse_repo_edges(repo_edges, login)
     repo_name = repo_edge["node"]["name"]
     repo_concept_config = repo_edge["node"]["object"]
     repo_created_at = repo_edge["node"]["createdAt"]
+    repo_description = repo_edge["node"]["description"]
 
     languages = repo_edge['node']['languages']['nodes'].map{|lang| lang['name']}
 
@@ -212,6 +216,7 @@ def parse_repo_edges(repo_edges, login)
       {
         login: login,
         repo_name: repo_name,
+        description: repo_description,
         concept_config: repo_concept_config,
         languages: languages,
         created_at: repo_created_at
@@ -301,6 +306,7 @@ def parse_hrconcept_yaml(yaml_text, &block)
   end
 end
 
+# *********** START EXECUTION ********** #
 setup_logging
 setup_exit
 
@@ -329,7 +335,7 @@ valid_concepts = concepts.map do |concept|
     concept[:concept_url] = "#{concept[:slug]}.#{ROOT_DOMAIN}"
     concept[:concept_link_url] = concept_yaml['url'] ? "http://#{concept[:concept_url]}" : concept[:github_url]
     concept[:original_url] = concept_yaml['url'] || concept[:github_url]
-    concept[:description] = concept_yaml.fetch('description', '').strip
+    concept[:description] = (concept_yaml['description'] || concept.fetch(:description, '')).strip
 
     concept[:languages] += concept_yaml['technologies'] || []
     concept[:languages] = concept[:languages].reject {|lang| lang =~ /html|css/i}
