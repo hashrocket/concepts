@@ -290,7 +290,11 @@ end
 def parse_hrconcept_yaml(yaml_text, &block)
   begin
     concept_yaml = YAML.load(yaml_text)
-    block.call(concept_yaml)
+    if concept_yaml
+      block.call(concept_yaml)
+    else
+      block.call({})
+    end
   rescue Psych::SyntaxError => e
     logger.error("YAML for #{concept[:login]}/#{concept[:repo]} was unparseable, please edit and try again.")
     nil
@@ -325,11 +329,11 @@ valid_concepts = concepts.map do |concept|
     concept[:concept_url] = "#{concept[:slug]}.#{ROOT_DOMAIN}"
     concept[:concept_link_url] = concept_yaml['url'] ? "http://#{concept[:concept_url]}" : concept[:github_url]
     concept[:original_url] = concept_yaml['url'] || concept[:github_url]
-    concept[:description] = concept_yaml['description'].strip
+    concept[:description] = concept_yaml.fetch('description', '').strip
 
     concept[:languages] += concept_yaml['technologies'] || []
     concept[:languages] = concept[:languages].reject {|lang| lang =~ /html|css/i}
-    concept[:banner] = concept_yaml['banner'].to_s == "true"
+    concept[:banner] = concept_yaml.fetch('banner', "true").to_s == "true"
 
     get_concept_screenshot(concept[:slug], concept[:original_url])
     concept[:screenshot_url] = "images/#{concept[:slug]}.png"
