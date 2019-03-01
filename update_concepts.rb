@@ -54,6 +54,14 @@ def setup_exit
   end
 end
 
+def titleize(value)
+  value.split(/[-_]/).map {|x| x.capitalize}.join(" ")
+end
+
+def slugify(value)
+  value.downcase.gsub(/\s/, ?-)
+end
+
 def graphql_request(payload)
   logger.info('request')
   url = 'https://api.github.com/graphql'
@@ -212,8 +220,8 @@ def parse_repo_edges(repo_edges, login)
   end.compact
 end
 
-def get_nginx_config(concept_yaml, concept)
-  banner_sub_filter = if concept_yaml['banner']
+def get_nginx_config(concept)
+  banner_sub_filter = if concept[:banner]
                         <<~BANNER_FILTER
                         sub_filter <body> '<body><iframe seamless=\"seamless\" style=\"width: 100%; height: 50px; border: none;\" src="http://#{ROOT_DOMAIN_URL}/header.html">#{HEADER}</iframe><div style=\"position: relative;\">';
                         sub_filter </body> '</div></body>';
@@ -229,7 +237,7 @@ def get_nginx_config(concept_yaml, concept)
 
     location / {
       proxy_set_header Accept-Encoding "";
-      proxy_pass #{concept_yaml['url']};
+      proxy_pass #{concept[:original_url]};
       proxy_redirect off;
       proxy_read_timeout 5m;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -245,22 +253,24 @@ end
 
 WHITE_IMAGE_OF_SPECIFIC_SIZE = "89283a7c5a1284bd6353384b5e86ea2fa282bbf8"
 
-def get_concept_screenshot(concept_yaml)
-  screenshot_path = "#{WWW_DIR}/images/#{concept_yaml['name']}.png"
+def get_concept_screenshot(slug, original_url)
+  screenshot_path = "#{WWW_DIR}/images/#{slug}.png"
 
   get_screenshot = if File.exists?(screenshot_path)
                      time_since_screenshot = Time.new - File.mtime(screenshot_path)
-                     (time_since_screenshot > 60 * 60 * 24 * 2) || `git hash-object #{screenshot_path}` == WHITE_IMAGE_OF_SPECIFIC_SIZE
+                     (time_since_screenshot > 60 * 60 * 24 * 2) || `git hash-object #{screenshot_path}`.strip == WHITE_IMAGE_OF_SPECIFIC_SIZE
                    else
                      true
                    end
 
   if get_screenshot
+    logger.info("Getting screenshot #{screenshot_path}")
+
     if File.exists?(screenshot_path)
       FileUtils.mv(screenshot_path, "#{screenshot_path}.bk")
     end
 
-    command = "sudo -u #{USER} node screenshot.js #{concept_yaml['url']} #{screenshot_path}"
+    command = "sudo -u #{USER} node screenshot.js #{original_url} #{screenshot_path}"
     `#{command}`
 
     unless File.exists?(screenshot_path)
@@ -308,14 +318,24 @@ FileUtils.mkdir_p("#{WWW_DIR}/images/")
 
 valid_concepts = concepts.map do |concept|
   parse_hrconcept_yaml(concept[:concept_config]['text']) do |concept_yaml|
-    concept[:concept_url] = "#{concept_yaml['name']}.#{ROOT_DOMAIN}"
+    concept[:title] = titleize(concept_yaml['name'] || concept[:repo_name])
+    concept[:slug] = slugify(concept_yaml['name'] || concept[:repo_name])
 
-    concept_nginx = get_nginx_config(concept_yaml, concept)
-    get_concept_screenshot(concept_yaml)
+    concept[:github_url] = "https://github.com/#{concept[:login]}/#{concept[:repo_name]}"
+    concept[:concept_url] = "#{concept[:slug]}.#{ROOT_DOMAIN}"
+    concept[:concept_link_url] = concept_yaml['url'] ? "http://#{concept[:concept_url]}" : concept[:github_url]
+    concept[:original_url] = concept_yaml['url'] || concept[:github_url]
+    concept[:description] = concept_yaml['description'].strip
 
     concept[:languages] += concept_yaml['technologies'] || []
+    concept[:languages] = concept[:languages].reject {|lang| lang =~ /html|css/i}
+    concept[:banner] = concept_yaml['banner'].to_s == "true"
 
-    File.write("#{NGINX_DIR_TMP}/#{concept_yaml['name']}", concept_nginx)
+    get_concept_screenshot(concept[:slug], concept[:original_url])
+    concept[:screenshot_url] = "images/#{concept[:slug]}.png"
+    concept_nginx = get_nginx_config(concept)
+
+    File.write("#{NGINX_DIR_TMP}/#{concept[:slug]}", concept_nginx)
 
     concept
   end
@@ -326,18 +346,17 @@ FileUtils.cp_r(Dir.glob("#{NGINX_DIR_TMP}/*"), "#{NGINX_DIR}")
 FileUtils.cp('default.nginx', "#{NGINX_DIR}")
 
 concepts_json = concepts.map do |concept|
-  concept_yaml = YAML.load(concept[:concept_config]['text'])
   {
-    title: concept_yaml['name'],
+    title: concept[:title],
     author: concept[:login],
     created_at: concept[:created_at],
     full_name: users_map[concept[:login]],
-    description: concept_yaml['description'].strip,
-    languages: concept[:languages],
-    screenshot_url: "images/#{concept_yaml['name']}.png",
-    hrcpt_url: "http://" + concept[:concept_url],
+    description: concept[:description],
+    languages: concept[:languages].uniq {|x| x.downcase},
+    screenshot_url: concept[:screenshot_url],
+    hrcpt_url: concept[:concept_link_url],
     author_url: "http://github.com/#{concept[:login]}",
-    github_url: "https://github.com/#{concept[:login]}/#{concept[:repo_name]}",
+    github_url: concept[:github_url]
   }
 end
 
