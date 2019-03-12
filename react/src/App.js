@@ -24,7 +24,8 @@ const ApplicationContainer = styled.div`
 `;
 
 const Tagline = styled.div`
-  font-family: Sarala-Bold;
+  font-family: Sarala;
+  font-weight: 700;
   font-size: 19px;
   color: ${colors.dark};
   letter-spacing: 0.9px;
