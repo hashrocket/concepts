@@ -347,7 +347,8 @@ valid_concepts = concepts.map do |concept|
     concept[:original_url] = concept_yaml['url'] || concept[:github_url]
     concept[:description] = (concept_yaml['description'] || concept.fetch(:description, '')).strip
 
-    concept[:languages] += concept_yaml['technologies'] || []
+    override_languages = concept_yaml['technologies'] || []
+    concept[:languages] = override_languages.length > 0 ? override_languages : concept[:languages]
     concept[:languages] = concept[:languages].reject {|lang| lang =~ /html|css/i}
     concept[:banner] = concept_yaml.fetch('banner', "true").to_s == "true"
 
