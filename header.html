@@ -1,7 +1,11 @@
 <!-- because this html snippet is used in an nginx sub filter, please use only "double quotes" -->
+<html>
+<head>
 <style>
   body {
     margin: 0;
+    height: 45px;
+    overflow: hidden;
   }
 
     header {
@@ -45,7 +49,7 @@
         top: 4px;
         left: 19px;
         background-repeat: no-repeat;
-        background-image: url('/hashrocket.svg');
+        background-image: url("/hashrocket.svg");
     }
 
     .title {
@@ -76,31 +80,35 @@
     .info {
     }
 </style>
+</head>
 
-<header>
-    <div class="left">
-        <a id="hashrocket" href="https://hashrocket.com"><div class="hashrocket"></div></a>
-        <a id="hrcpt" href="http://hrcpt.online"><div class="concepts">CONCEPTS</div></a>
-    </div>
-    <div class="middle">
-        <a id="github" href="http://github.com/chriserin"><div class="github"></div></a>
-        <div class="info"></div>
-    </div>
-    <div class="right">
-        <a id="identity" href="http://something.hrcpt.online"><div class="title">Opening Day Progress Bar</div></a>
-    <div>
-</header>
+<body>
+  <header>
+      <div class="left">
+          <a id="hashrocket" href="https://hashrocket.com"><div class="hashrocket"></div></a>
+          <a id="hrcpt" href="http://hrcpt.online"><div class="concepts">CONCEPTS</div></a>
+      </div>
+      <div class="middle">
+          <a id="github" href="<%= concept[:github_url] %>"><div class="github"></div></a>
+          <div class="info"></div>
+      </div>
+      <div class="right">
+        <a id="identity" href="<%= concept[:hrcpt_url] %>"><div class="title"><%= concept[:title] %></div></a>
+      <div>
+  </header>
 
-<script>
-  (function() {
-    var visitOnParent = function(e) {
-      e.preventDefault();
-      parent.postMessage(e.currentTarget.href, "*");
-    };
+  <script>
+    (function() {
+      var visitOnParent = function(e) {
+        e.preventDefault();
+        parent.postMessage(e.currentTarget.href, "*");
+      };
 
-    document.getElementById("hashrocket").addEventListener("click", visitOnParent);
-    document.getElementById("hrcpt").addEventListener("click", visitOnParent);
-    document.getElementById("github").addEventListener("click", visitOnParent);
-    document.getElementById("identity").addEventListener("click", visitOnParent);
-  })();
-</script>
+      document.getElementById("hashrocket").addEventListener("click", visitOnParent);
+      document.getElementById("hrcpt").addEventListener("click", visitOnParent);
+      document.getElementById("github").addEventListener("click", visitOnParent);
+      document.getElementById("identity").addEventListener("click", visitOnParent);
+    })();
+  </script>
+</body>
+</html>
