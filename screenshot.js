@@ -25,7 +25,21 @@ const jpgPath = process.argv[3];
   }
 
   await browser.close();
+
+  await scaleScreenshot(jpgPath);
+
 })();
+
+async function scaleScreenshot(file) {
+  await Jimp.read(file, (err, screenshot) => {
+    console.log("before scaling", file)
+    if (err) throw err;
+    console.log("scaling", file)
+    screenshot
+      .resize(295, 166) // resize
+      .write(file); // save
+  });
+}
 
 async function getScreenshot(page, file) {
   await page.goto(url).catch((err) => { console.log(err); });
