@@ -85,7 +85,8 @@ const ImgFilter = styled.div`
 
 const Title = styled.div`
   background-color: #AF1F24;
-  font-family: Saira-Bold;
+  font-family: Saira;
+  font-weight: 700;
   font-size: 23px;
   color: #FFFFFF;
   letter-spacing: 1.09px;
@@ -104,7 +105,8 @@ const AuthorLine = styled.div`
 `;
 
 const Author = styled.div`
-  font-family: Sarala-Bold;
+  font-family: Sarala;
+  font-weight: 700;
   font-size: 18px;
   color: #232326;
   letter-spacing: 0.85px;
@@ -128,7 +130,8 @@ const TechsLine = styled.div`
   padding: 0 10px;
   display: flex;
   justify-content: space-between;
-  font-family: Sarala-Regular;
+  font-family: Sarala;
+  font-weight: 400;
   font-size: 14px;
   color: #000000;
   letter-spacing: 1.35px;
@@ -182,7 +185,8 @@ const DescriptionContainer = styled.div`
     }
   }
 
-  font-family: EBGaramond-Regular;
+  font-family: "EB Garamond";
+  font-weight: 400;
   font-size: 14px;
   color: #000000;
   letter-spacing: 1.15px;
@@ -227,10 +231,11 @@ const Concept = (props) => {
     languages,
     github_url,
     author_url,
+    slug,
   } = props.concept;
 
   return (
-    <ConceptContainer open={descriptionOpen}>
+    <ConceptContainer open={descriptionOpen} id={slug}>
       <a href={props.concept.hrcpt_url}>
         <Screenshot screenshotUrl={props.concept.screenshot_url}></Screenshot>
         <ImgFilter/>
