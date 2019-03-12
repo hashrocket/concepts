@@ -261,6 +261,8 @@ WHITE_IMAGE_OF_SPECIFIC_SIZE = "89283a7c5a1284bd6353384b5e86ea2fa282bbf8"
 def get_concept_screenshot(slug, original_url)
   screenshot_path = "#{WWW_DIR}/images/#{slug}.png"
 
+  FileUtils.rm(Dir.glob("#{WWW_DIR}/images/#{slug}.*.png"))
+
   get_screenshot = if File.exists?(screenshot_path)
                      time_since_screenshot = Time.new - File.mtime(screenshot_path)
                      (time_since_screenshot > 60 * 60 * 24 * 2) || `git hash-object #{screenshot_path}`.strip == WHITE_IMAGE_OF_SPECIFIC_SIZE
@@ -290,6 +292,12 @@ def get_concept_screenshot(slug, original_url)
 
     File.chmod(0444, screenshot_path)
   end
+
+  cache_buster_path = "#{WWW_DIR}/images/#{slug}.#{Time.now.to_i}.png"
+
+  FileUtils.cp(screenshot_path, cache_buster_path)
+
+  cache_buster_path
 end
 
 def parse_hrconcept_yaml(yaml_text, &block)
@@ -331,7 +339,6 @@ FileUtils.mkdir_p("#{WWW_DIR}/images/")
 valid_concepts = concepts.map do |concept|
   parse_hrconcept_yaml(concept[:concept_config]['text']) do |concept_yaml|
     concept[:title] = titleize(concept_yaml['name'] || concept[:repo_name])
-    puts "TITLE: #{concept[:title]}"
     concept[:slug] = slugify(concept_yaml['name'] || concept[:repo_name])
 
     concept[:github_url] = "https://github.com/#{concept[:login]}/#{concept[:repo_name]}"
@@ -344,11 +351,12 @@ valid_concepts = concepts.map do |concept|
     concept[:languages] = concept[:languages].reject {|lang| lang =~ /html|css/i}
     concept[:banner] = concept_yaml.fetch('banner', "true").to_s == "true"
 
-    get_concept_screenshot(concept[:slug], concept[:original_url])
-    concept[:screenshot_url] = "images/#{concept[:slug]}.png"
+    screenshot_url = get_concept_screenshot(concept[:slug], concept[:original_url])
+    concept[:screenshot_url] = screenshot_url
     concept_nginx = get_nginx_config(concept)
 
     File.write("#{NGINX_DIR_TMP}/#{concept[:slug]}", concept_nginx)
+    File.write("#{WWW_DIR}/#{concept[:slug]}-header.html", ERB.new(HEADER).result(binding))
 
     concept
   end
