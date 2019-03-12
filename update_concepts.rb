@@ -293,9 +293,9 @@ def get_concept_screenshot(slug, original_url)
     File.chmod(0444, screenshot_path)
   end
 
-  cache_buster_path = "#{WWW_DIR}/images/#{slug}.#{Time.now.to_i}.png"
+  cache_buster_path = "images/#{slug}.#{Time.now.to_i}.png"
 
-  FileUtils.cp(screenshot_path, cache_buster_path)
+  FileUtils.cp(screenshot_path, "#{WWW_DIR}/#{cache_buster_path}")
 
   cache_buster_path
 end
