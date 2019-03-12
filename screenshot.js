@@ -19,7 +19,6 @@ const jpgPath = process.argv[3];
 
   while (allOne && counter < 10) {
     allOne = await isAllOneColor(jpgPath)
-    console.log("iterating", counter);
     await getScreenshot(page, jpgPath);
     counter++;
   }
@@ -32,9 +31,7 @@ const jpgPath = process.argv[3];
 
 async function scaleScreenshot(file) {
   await Jimp.read(file, (err, screenshot) => {
-    console.log("before scaling", file)
     if (err) throw err;
-    console.log("scaling", file)
     screenshot
       .resize(295, 166) // resize
       .write(file); // save
@@ -43,6 +40,9 @@ async function scaleScreenshot(file) {
 
 async function getScreenshot(page, file) {
   await page.goto(url).catch((err) => { console.log(err); });
+  await page.evaluate(() => {
+    document.querySelector('button[data-ga-click]').click();
+  });
   await sleep(1000);
   return await page.screenshot({path: jpgPath}).catch((err) => { console.log("error", err); });
 }
