@@ -228,7 +228,7 @@ end
 def get_nginx_config(concept)
   banner_sub_filter = if concept[:banner]
                         <<~BANNER_FILTER
-                        sub_filter <body> '<body><iframe seamless=\"seamless\" style=\"width: 100%; height: 50px; border: none;\" src="http://#{ROOT_DOMAIN_URL}/header.html">#{HEADER}</iframe><div style=\"position: relative;\">';
+                        sub_filter <body> '<body><iframe seamless=\"seamless\" style=\"width: 100%; border: none;\" src="http://#{ROOT_DOMAIN_URL}/header.html">#{HEADER}</iframe><div style=\"position: relative;\">';
                         sub_filter </body> '</div></body>';
                         BANNER_FILTER
                       end
