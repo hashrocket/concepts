@@ -321,6 +321,8 @@ logger.info("We found #{concepts.count} instances of a .hrconcept")
 
 FileUtils.mkdir_p("#{WWW_DIR}")
 FileUtils.cp('header.html', "#{WWW_DIR}/" )
+FileUtils.cp('hashrocket.svg', "#{WWW_DIR}/" )
+FileUtils.cp('github.svg', "#{WWW_DIR}/" )
 FileUtils.mkdir_p(NGINX_DIR)
 FileUtils.mkdir_p(NGINX_DIR_TMP)
 FileUtils.rm_f("#{NGINX_DIR_TMP}/*")
@@ -329,6 +331,7 @@ FileUtils.mkdir_p("#{WWW_DIR}/images/")
 valid_concepts = concepts.map do |concept|
   parse_hrconcept_yaml(concept[:concept_config]['text']) do |concept_yaml|
     concept[:title] = titleize(concept_yaml['name'] || concept[:repo_name])
+    puts "TITLE: #{concept[:title]}"
     concept[:slug] = slugify(concept_yaml['name'] || concept[:repo_name])
 
     concept[:github_url] = "https://github.com/#{concept[:login]}/#{concept[:repo_name]}"

@@ -4,38 +4,93 @@
     margin: 0;
   }
 
-  .hrconcepts-header {
-    background-color: #414042;
-    height: 2rem;
-    padding: 0.4rem;
-    color: white;
+    header {
+        width: 100%;
+        background: #232326;
+        color: white;
+        height: 45px;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+    }
 
-    display: flex;
-    align-items: center;
-  }
+    a {
+        text-decoration: none;
+    }
 
-  .hrconcepts-header img {
-    height: 1.6rem;
-  }
+    .title { 
+        background: #AF1F24;
+        font-family: Saira-Bold;
+        font-size: 24px;
+        color: #FFFFFF;
+        letter-spacing: 1.13px;
+        text-align: left;
+    }
 
-  .hrconcepts-header span.title {
-    margin-top: 0.4rem;
-  }
+    .concepts { 
+        font-family: Saira-Bold;
+        font-size: 26px;
+        color: #FFFFFF;
+        letter-spacing: 10px;
+        text-align: left;
+        line-height: 43px;
+        position: relative;
+        top: -10px;
+        left: 18px;
+    }
 
-  .hrconcepts-header span.title a {
-    color: white;
-  }
+    .hashrocket {
+        height: 18px;
+        position: relative;
+        top: 4px;
+        left: 19px;
+        background-repeat: no-repeat;
+        background-image: url('/hashrocket.svg');
+    }
+
+    .title {
+        display: inline-block;
+        right: 0;
+        top: 0;
+        veritcal-align: center;
+        height: 42px;
+        padding-top: 3px;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    .left {
+        flex-grow: 1;
+    }
+    .middle {
+        background-color: #726767;
+        width: 40px;
+    }
+    .github {
+        margin-top: 10px;
+        margin-left: 8px;
+        height: 45px;
+        background-repeat: no-repeat;
+        background-image: url("/github.svg");
+    }
+    .right {
+    }
+    .info {
+        /* eventually */
+    }
 </style>
 
-<header class="hrconcepts-header">
-  <a id="hashrocket" href="https://hashrocket.com" target="_blank" rel="noopener noreferrer">
-    <img src="https://d15zqjc70bk603.cloudfront.net/assets/brand/hr_logo_h_light-4cb402f22041c39699a752bd21aaa38ebd860b343ae20a5fe97342c8ec53f156.svg">
-  </a>
-  <span class="title">
-    <a id="hrcpt" href="http://hrcpt.online" target="_blank" rel="noopener noreferrer">
-      Concepts
-    </a>
-  </span>
+<header>
+    <div class="left">
+        <a id="hashrocket" href="https://hashrocket.com"><div class="hashrocket"></div></a>
+        <a id="hrcpt" href="http://hrcpt.online"><div class="concepts">CONCEPTS</div></a>
+    </div>
+    <div class="middle">
+        <a id="github" href="http://github.com/chriserin"><div class="github"></div></a>
+        <div class="info"></div>
+    </div>
+    <div class="right">
+        <a id="identity" href="http://something.hrcpt.online"><div class="title">Opening Day Progress Bar</div></a>
+    <div>
 </header>
 
 <script>
@@ -47,5 +102,7 @@
 
     document.getElementById("hashrocket").addEventListener("click", visitOnParent);
     document.getElementById("hrcpt").addEventListener("click", visitOnParent);
+    document.getElementById("github").addEventListener("click", visitOnParent);
+    document.getElementById("identity").addEventListener("click", visitOnParent);
   })();
 </script>

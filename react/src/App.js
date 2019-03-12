@@ -1,106 +1,286 @@
-import React, { Component } from 'react';
-import Lettering from './Lettering'
-import Concept from './Concept';
-import './App.css';
-import sortBy from 'lodash/sortBy';
-import reverse from 'lodash/reverse';
-import take from 'lodash/take';
+import React, { Component, useState } from 'react';
+import styled from 'styled-components';
+import hashrocketHeader from './hashrocket-header.svg';
+import conceptsHeader from './concepts-header.svg';
+import githubLogo from './github-logo.svg';
+import { colors } from './colors.js';
+import zip from 'lodash/zip';
+import downCaret from './down-caret.svg';
+
+const ApplicationContainer = styled.div`
+  background-color: ${colors.backgroundGrey};
+  padding-bottom: 100px;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      color: inherit;
+    }
+  }
+`;
+
+const Tagline = styled.div`
+  font-family: Sarala-Bold;
+  font-size: 19px;
+  color: ${colors.dark};
+  letter-spacing: 0.9px;
+  text-align: left;
+
+  text-decoration: none !important;
+`;
+
+const Header = styled.header`
+  margin: 24px auto 0px;
+  width: 400px;
+`;
+
+const HashrocketLogo = styled.div`
+`;
+
+const ConceptsLogo = styled.div`
+  margin: 15px 0 8px;
+`;
+
+const ConceptsContainer = styled.div`
+  display: grid;
+  width: 1060px;
+  margin: 40px auto 0;
+  grid-template-columns: repeat(3, 1fr);
+  grid-row-gap: 72px;
+`;
+
+const ConceptContainer = styled.div`
+  width: 295px;
+  transition: max-height .3s ease-in;
+  min-height: 250px;
+  max-height: ${({open}) => open ? "529px" : "250px" };
+  background-color: white;
+  position: relative;
+  background: #FFFFFF;
+  box-shadow: 1px 1px 7px 1px rgba(199,199,199,0.50);
+`;
+
+const Screenshot = styled.div`
+  background-image: url('http://hrcpt.online/${(props) => props.screenshotUrl}');
+  background-size:     cover;
+  background-repeat:   no-repeat;
+  background-position: center center;
+  width: 295px;
+  height: 166px;
+`;
+
+const ImgFilter = styled.div`
+  background: rgba(139,139,151,0.44);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 295px;
+  height: 166px;
+`;
+
+const Title = styled.div`
+  background-color: #AF1F24;
+  font-family: Saira-Bold;
+  font-size: 23px;
+  color: #FFFFFF;
+  letter-spacing: 1.09px;
+  text-align: left;
+  position: absolute;
+  top: 124px;
+  left: -12px;
+  padding: 0 10px;
+`;
+
+const AuthorLine = styled.div`
+  margin-top: 10px;
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Author = styled.div`
+  font-family: Sarala-Bold;
+  font-size: 18px;
+  color: #232326;
+  letter-spacing: 0.85px;
+  text-align: left;
+  display: inline-block;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const GithubLogo = styled.img`
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  text-align: right;
+`;
+
+const TechsLine = styled.div`
+  margin-top: 8px;
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+  font-family: Sarala-Regular;
+  font-size: 14px;
+  color: #000000;
+  letter-spacing: 1.35px;
+  text-align: left;
+
+`;
+
+const DownCaret = styled.img`
+  transition: all .3s ease-in;
+  margin-right: 7px;
+  transform: ${ (props) => ( props.descriptionOpen ? "rotate(0.5turn);" : "none")};
+`
+
+const Tech = styled.span`
+  cursor: pointer;
+  background-color: ${({selected}) => (selected ? 'rgba(255,41,49,0.32)' : 'inherit')};
+
+  &:first-child {
+    margin-left: -3px;
+  }
+
+  padding-left: 3px;
+  padding-right: 3px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`
+
+const Techs = (props) => {
+  const techs = props.techs.map((tech) => (
+    <Tech onClick={() => props.selectTech(tech)} selected={props.selectedTech === tech} key={tech}>{tech}</Tech>
+  ));
+
+  const spans = zip(techs, Array(techs.length - 1).fill(<span>•</span>));
+
+  return <div>{spans}</div>;
+}
+
+const DescriptionContainer = styled.div`
+  p {
+    transition: all .3s ease-in;
+    padding: 0px 20px 0px 10px;
+    opacity: ${ (props) => ( !props.open ? 0 : 1)};
+    transition-timing-function: ${ (props) => ( !props.open ? "ease-in" : "ease-in")};
+    ${ (props) => !props.open ?
+      "max-height: 0; line-height: 5px; font-size: 5px; "
+      :
+      "max-height: 320px; line-height: inherit; font-size: inherit;"
+    }
+  }
+
+  font-family: EBGaramond-Regular;
+  font-size: 14px;
+  color: #000000;
+  letter-spacing: 1.15px;
+  text-align: left;
+  line-height: 22px;
+`;
+
+const Description = (props) => {
+  return (
+    <DescriptionContainer open={props.open}>
+      <p>
+        {props.description}
+      </p>
+    </DescriptionContainer>
+  );
+}
+
+const InfoArea = (props) => {
+  return (
+    <div>
+      <AuthorLine>
+        <Author><a href={props.authorUrl}>by {props.author}</a></Author>
+        <a href={props.githubUrl}><GithubLogo src={githubLogo} /></a>
+      </AuthorLine>
+      <TechsLine>
+        <Techs techs={props.techs} selectTech={props.selectTech} selectedTech={props.selectedTech} />
+        <DownCaret onClick={props.toggleDescription} descriptionOpen={props.descriptionOpen} src={downCaret} />
+      </TechsLine>
+      <Description open={props.descriptionOpen} description={props.description}/>
+    </div>
+  )
+};
+
+const Concept = (props) => {
+
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
+
+  const {
+    title,
+    full_name,
+    description,
+    languages,
+    github_url,
+    author_url,
+  } = props.concept;
+
+  return (
+    <ConceptContainer open={descriptionOpen}>
+      <a href={props.concept.hrcpt_url}>
+        <Screenshot screenshotUrl={props.concept.screenshot_url}></Screenshot>
+        <ImgFilter/>
+        <Title>{props.concept.title}</Title>
+      </a>
+      <InfoArea
+        author={full_name}
+        techs={languages}
+        githubUrl={github_url}
+        description={description}
+        authorUrl={author_url}
+        toggleDescription={() => { setDescriptionOpen(!descriptionOpen) } }
+        descriptionOpen={descriptionOpen}
+        selectTech={props.selectTech}
+        selectedTech={props.selectedTech}
+      />
+    </ConceptContainer>
+  );
+};
 
 class App extends Component {
-  constructor() {
-    super()
-
-    this.state = {currentTag: "", modalDisplay: false}
+  constructor(props) {
+    super(props);
+    this.state = {selectedTech: ''};
   }
 
-  handleTagChange = (tag) => {
-    this.setState({currentTag: tag})
-  }
-
-  renderTechNavs(concepts) {
-    const results = this.filterMostUsedTechs(concepts);
-
-    return results.map((result) => {
-      return <div className={`menu-item ${this.state.currentTag === result ? 'selected' : ''}` } onClick={ () => { this.handleTagChange(result) } }>{result}</div>
-    });
-  }
-
-  filterMostUsedTechs(concepts) {
-    const results = {};
-
-    concepts.forEach((concept) => {
-      concept.languages.forEach((language) => {
-        if (results[language]) {
-          results[language]++;
-        } else {
-          results[language] = 1;
-        }
-      })
-    })
-
-    const languages = Object.entries(results);
-    const sortedLanguages = sortBy(languages, (languageCount) => { return languageCount[1]});
-
-    return take(reverse(sortedLanguages.map((t) => t[0])), 7);
-  }
-
-  renderConcepts(concepts) {
-    const sortedConcepts = sortBy(concepts, concept => new Date(concept.created_at));
-
-    return reverse(sortedConcepts).map((concept) =>
-      <Concept concept={concept} onPillClick={this.handleTagChange}/>
-    )
-  }
-
-  filterConceptsByTag(concepts) {
-    return concepts.filter((concept) => {
-      return concept.languages.find((lang) => {
-        return lang.match(this.state.currentTag)
-      })
-    })
+  renderConcepts(concepts, selectTech, selectedTech) {
+    return concepts.filter((concept) => !selectedTech || concept.languages.includes(selectedTech)).map((concept) => (
+      <Concept key={concept.title} concept={concept} selectTech={selectTech} selectedTech={selectedTech}></Concept>
+    ))
   }
 
   render() {
+    const {concepts} = this.props;
+
     return (
-      <div className="App">
-        <Modal display={this.state.modalDisplay} closeModal={() => this.setState({modalDisplay: false})} />
-        <header className="App-header">
-          <div className="header-title">
-            <a href='/'>
-              <Lettering />
-            </a>
-            <div className="hr-container">
-              <h2>
-                <a href="https://hashrocket.com" class="hr">A Hashrocket project</a>
-                <div className="tag-line" onClick={() => this.setState({modalDisplay: true})}>A Gallery of Side Projects</div>
-              </h2>
-            </div>
-          </div>
-        </header>
-        <nav className="nav">
-          {this.renderTechNavs(this.props.concepts)}
-        </nav>
-        <ul className="concepts">
-          {this.renderConcepts(this.filterConceptsByTag(this.props.concepts))}
-        </ul>
-        <footer className="footer">
-        </footer>
-      </div>
+      <ApplicationContainer>
+        <a href="/">
+          <Header>
+            <HashrocketLogo>
+              <img src={hashrocketHeader} />
+            </HashrocketLogo>
+            <ConceptsLogo>
+              <img src={conceptsHeader} />
+            </ConceptsLogo>
+            <Tagline>A Gallery For Our Side Projects</Tagline>
+          </Header>
+        </a>
+        <ConceptsContainer>
+          {this.renderConcepts(concepts, (tech) => this.setState({selectedTech: this.state.selectedTech === tech ? '' : tech}), this.state.selectedTech)}
+        </ConceptsContainer>
+      </ApplicationContainer>
     );
   }
-}
-
-const Modal = (props) => {
-  return (
-    <div className="modal" onClick={props.closeModal} style={{display: props.display ? "block" : "none"}}>
-      <div className="modal-content">
-        <h2>About</h2>
-        <p>
-        Concepts is a place for us to put our side projects on display. When learning a new technology we've found it's best to try and make something. These projects very often look like rough, incomplete ideas, but they represent a new frontier for a Hashrocketeer in our learning about programming.
-        </p>
-      </div>
-    </div>
-  );
 }
 
 export default App;
