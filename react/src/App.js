@@ -5,6 +5,8 @@ import conceptsHeader from './concepts-header.svg';
 import githubLogo from './github-logo.svg';
 import { colors } from './colors.js';
 import zip from 'lodash/zip';
+import sortBy from 'lodash/sortBy';
+import reverse from 'lodash/reverse';
 import downCaret from './down-caret.svg';
 
 const ApplicationContainer = styled.div`
@@ -254,7 +256,9 @@ class App extends Component {
   }
 
   renderConcepts(concepts, selectTech, selectedTech) {
-    return concepts.filter((concept) => !selectedTech || concept.languages.includes(selectedTech)).map((concept) => (
+    return reverse(sortBy(concepts, (concept) => Date.parse(concept.created_at))).
+      filter((concept) => !selectedTech || concept.languages.includes(selectedTech)).
+      map((concept) => (
       <Concept key={concept.title} concept={concept} selectTech={selectTech} selectedTech={selectedTech}></Concept>
     ))
   }
