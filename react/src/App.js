@@ -51,6 +51,7 @@ const ConceptsContainer = styled.div`
   margin: 40px auto 0;
   grid-template-columns: repeat(3, 1fr);
   grid-row-gap: 72px;
+  transition: all .3s ease-in;
 `;
 
 const ConceptContainer = styled.div`
@@ -143,6 +144,7 @@ const DownCaret = styled.img`
 
 const Tech = styled.span`
   cursor: pointer;
+  transition: all .3s ease-in;
   background-color: ${({selected}) => (selected ? 'rgba(255,41,49,0.32)' : 'inherit')};
 
   &:first-child {
