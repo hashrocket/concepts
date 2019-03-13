@@ -41,7 +41,11 @@ async function scaleScreenshot(file) {
 async function getScreenshot(page, file) {
   await page.goto(url).catch((err) => { console.log(err); });
   await page.evaluate(() => {
-    document.querySelector('button[data-ga-click]').click();
+    // dismiss github notice if it exists
+    let button = document.querySelector('button[data-ga-click]');
+    if (button) {
+      button.click();
+    }
   });
   await sleep(1000);
   return await page.screenshot({path: jpgPath}).catch((err) => { console.log("error", err); });
