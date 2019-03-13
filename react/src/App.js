@@ -67,7 +67,7 @@ const ConceptContainer = styled.div`
 `;
 
 const Screenshot = styled.div`
-  background-image: url('http://hrcpt.online/${props => props.screenshotUrl}');
+  background-image: url('/${(props) => props.screenshotUrl}');
   background-size:     cover;
   background-repeat:   no-repeat;
   background-position: center center;
