@@ -279,10 +279,10 @@ class App extends Component {
         <a href="/">
           <Header>
             <HashrocketLogo>
-              <img src={hashrocketHeader} />
+              <img src={hashrocketHeader} alt="hashrocket logo" />
             </HashrocketLogo>
             <ConceptsLogo>
-              <img src={conceptsHeader} />
+              <img src={conceptsHeader} alt="concepts logo" />
             </ConceptsLogo>
             <Tagline>A Gallery For Our Side Projects</Tagline>
           </Header>
