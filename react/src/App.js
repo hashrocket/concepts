@@ -239,9 +239,9 @@ const Concept = (props) => {
   return (
     <ConceptContainer open={descriptionOpen} id={slug}>
       <a href={props.concept.hrcpt_url}>
-        <Screenshot screenshotUrl={props.concept.screenshot_url}></Screenshot>
-        <ImgFilter/>
-        <Title>{props.concept.title}</Title>
+        <Screenshot screenshotUrl={props.concept.screenshot_url} />
+        <ImgFilter />
+        <Title>{title}</Title>
       </a>
       <InfoArea
         author={full_name}
@@ -280,10 +280,10 @@ class App extends Component {
         <a href="/">
           <Header>
             <HashrocketLogo>
-              <img src={hashrocketHeader} />
+              <img src={hashrocketHeader} alt="hashrocket logo" />
             </HashrocketLogo>
             <ConceptsLogo>
-              <img src={conceptsHeader} />
+              <img src={conceptsHeader} alt="concepts logo" />
             </ConceptsLogo>
             <Tagline>A Gallery For Our Side Projects</Tagline>
           </Header>
