@@ -236,7 +236,7 @@ end
 def get_nginx_config(concept)
   banner_sub_filter = if concept[:banner]
                         <<~BANNER_FILTER
-                        sub_filter <body> '<body><iframe seamless=\"seamless\" style=\"width: 100%; height: 45px; border: none;\" src="http://#{ROOT_DOMAIN_URL}/#{concept[:slug]}-header.html"></iframe><div style=\"position: relative;\">';
+                        sub_filter <body> '<body><iframe seamless=\"seamless\" style=\"width: 100%; height: 45px; border: none;\" src="https://#{ROOT_DOMAIN_URL}/#{concept[:slug]}-header.html"></iframe><div style=\"position: relative;\">';
                         sub_filter </body> '</div></body>';
                         BANNER_FILTER
                       end
@@ -357,7 +357,7 @@ valid_concepts = concepts.map do |concept|
     concept[:slug] = slugify(concept_yaml['name'] || concept[:repo_name])
 
     concept[:concept_url] = "#{concept[:slug]}.#{ROOT_DOMAIN}"
-    concept[:concept_link_url] = concept_yaml['url'] ? "http://#{concept[:concept_url]}" : concept[:github_url]
+    concept[:concept_link_url] = concept_yaml['url'] ? "https://#{concept[:concept_url]}" : concept[:github_url]
     concept[:original_url] = concept_yaml['url'] || concept[:github_url]
     concept[:description] = (concept_yaml['description'] || concept.fetch(:description, '')).strip
 
@@ -391,7 +391,7 @@ concepts_json = concepts.map do |concept|
     languages: concept[:languages].uniq {|x| x.downcase},
     screenshot_url: concept[:screenshot_url],
     hrcpt_url: concept[:concept_link_url],
-    author_url: "http://github.com/#{concept[:login]}",
+    author_url: "https://github.com/#{concept[:login]}",
     github_url: concept[:github_url]
   }
 end
