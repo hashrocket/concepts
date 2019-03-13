@@ -238,9 +238,9 @@ const Concept = (props) => {
   return (
     <ConceptContainer open={descriptionOpen} id={slug}>
       <a href={props.concept.hrcpt_url}>
-        <Screenshot screenshotUrl={props.concept.screenshot_url}></Screenshot>
-        <ImgFilter/>
-        <Title>{props.concept.title}</Title>
+        <Screenshot screenshotUrl={props.concept.screenshot_url} />
+        <ImgFilter />
+        <Title>{title}</Title>
       </a>
       <InfoArea
         author={full_name}
