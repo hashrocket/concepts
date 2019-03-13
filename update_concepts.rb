@@ -206,7 +206,6 @@ def retrieve_second_page_concepts(next_queries)
 end
 
 def is_hashrocket_repo?(url, login)
-  puts "Hashrocket Repo: #{login} #{url}"
   url.include?('hashrocket') && login == "hashrocketeer"
 end
 
