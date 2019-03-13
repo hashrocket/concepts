@@ -244,7 +244,11 @@ def get_nginx_config(concept)
   <<~NGINX
   # this is an auto-generated from #{__FILE__}
   server {
-    listen #{ROOT_DOMAIN_PORT || 80};
+    listen #{ROOT_DOMAIN_PORT || 443};
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/concepts.hashrocket.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/concepts.hashrocket.com/privkey.pem;
 
     server_name #{concept[:concept_url]};
 
