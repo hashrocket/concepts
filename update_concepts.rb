@@ -81,7 +81,7 @@ def make_initial_github_request
             ... on User {
               login
               name
-              repositories(first:25) {
+              repositories(first:20) {
                 pageInfo {
                   endCursor
                   hasNextPage
@@ -92,6 +92,7 @@ def make_initial_github_request
                     description
                     name
                     isFork
+                    url
                     object(expression: \"master:.hrconcept\") {
                       ... on Blob {
                         text
@@ -168,6 +169,7 @@ def retrieve_second_page_concepts(next_queries)
                 description
                 name
                 isFork
+                url
                 object(expression: \"master:.hrconcept\") {
                   ... on Blob {
                     text
@@ -203,23 +205,30 @@ def retrieve_second_page_concepts(next_queries)
   end
 end
 
+def is_hashrocket_repo?(url, login)
+  puts "Hashrocket Repo: #{login} #{url}"
+  url.include?('hashrocket') && login == "hashrocketeer"
+end
+
 def parse_repo_edges(repo_edges, login)
   repo_edges.map do |repo_edge|
     repo_name = repo_edge["node"]["name"]
     repo_concept_config = repo_edge["node"]["object"]
     repo_created_at = repo_edge["node"]["createdAt"]
     repo_description = repo_edge["node"]["description"]
+    repo_url = repo_edge["node"]["url"]
 
     languages = repo_edge['node']['languages']['nodes'].map{|lang| lang['name']}
 
-    if repo_concept_config != nil && !repo_edge["node"]["isFork"]
+    if repo_concept_config != nil && !repo_edge["node"]["isFork"] && (repo_url.include?(login) || is_hashrocket_repo?(repo_url, login))
       {
         login: login,
         repo_name: repo_name,
         description: repo_description,
         concept_config: repo_concept_config,
         languages: languages,
-        created_at: repo_created_at
+        created_at: repo_created_at,
+        github_url: repo_url
       }
     end
   end.compact
@@ -344,7 +353,6 @@ valid_concepts = concepts.map do |concept|
     concept[:title] = titleize(concept_yaml['name'] || concept[:repo_name])
     concept[:slug] = slugify(concept_yaml['name'] || concept[:repo_name])
 
-    concept[:github_url] = "https://github.com/#{concept[:login]}/#{concept[:repo_name]}"
     concept[:concept_url] = "#{concept[:slug]}.#{ROOT_DOMAIN}"
     concept[:concept_link_url] = concept_yaml['url'] ? "http://#{concept[:concept_url]}" : concept[:github_url]
     concept[:original_url] = concept_yaml['url'] || concept[:github_url]
