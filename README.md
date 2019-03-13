@@ -28,10 +28,17 @@ technologies:
   - React
 ```
 
-## .hrconcept fields
+Here are the fields `.hrconcept` supports:
 
-* name         - (string) The title you'd like to display for your project.  It will default to a titleized version of the repository name.
-* url          - (string) The url for your application.  It will default to the github repo url.
-* banner       - (true|false) When set to true *Concepts* will inject a branded banner into your site. Defaults to true.
-* description  - (string) A short description of your project displayed on the index page, defaults to the github project description.
-* technologies - (array) A list of technologies in the project that you'd like to highlight, defaults to github's language list
+* name - (string) The title you'd like to display for your project.  It will
+  default to a titleized version of the repository name.
+* url - (string) The url for your application.  It will default to the GitHub
+  repo url.
+* banner - (true|false) When set to true *Concepts* will inject a branded
+  banner into your site. Defaults to true.
+* description - (string) A short description of your project displayed on the
+  index page, defaults to the GitHub project description.
+* technologies - (array) A list of technologies in the project that you'd like
+  to highlight, defaults to GitHub's [Linguist][linguist-repo] language evaluation.
+
+[linguist-repo]: (https://github.com/github/linguist)
