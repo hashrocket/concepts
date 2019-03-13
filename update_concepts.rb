@@ -261,7 +261,6 @@ WHITE_IMAGE_OF_SPECIFIC_SIZE = "89283a7c5a1284bd6353384b5e86ea2fa282bbf8"
 def get_concept_screenshot(slug, original_url)
   screenshot_path = "#{WWW_DIR}/images/#{slug}.png"
 
-  FileUtils.rm(Dir.glob("#{WWW_DIR}/images/#{slug}.*.png"))
 
   get_screenshot = if File.exists?(screenshot_path)
                      time_since_screenshot = Time.new - File.mtime(screenshot_path)
@@ -270,7 +269,9 @@ def get_concept_screenshot(slug, original_url)
                      true
                    end
 
-  if get_screenshot
+  old_file = Dir.glob("#{WWW_DIR}/images/#{slug}.*.png").first
+
+  if get_screenshot || !old_file
     logger.info("Getting screenshot #{screenshot_path}")
 
     if File.exists?(screenshot_path)
@@ -287,17 +288,19 @@ def get_concept_screenshot(slug, original_url)
         logger.error("The screenshot path does not exist: #{screenshot_path}\nMaybe check that puppeteer is installed with npm")
       end
     else
+      cache_buster_path = "images/#{slug}.#{Time.now.to_i}.png"
+
+      FileUtils.cp(screenshot_path, "#{WWW_DIR}/#{cache_buster_path}")
+
+      FileUtils.rm(old_file) if old_file
+
       FileUtils.rm_f("#{screenshot_path}.bk")
     end
 
     File.chmod(0444, screenshot_path)
   end
 
-  cache_buster_path = "images/#{slug}.#{Time.now.to_i}.png"
-
-  FileUtils.cp(screenshot_path, "#{WWW_DIR}/#{cache_buster_path}")
-
-  cache_buster_path
+  Dir.glob("#{WWW_DIR}/images/#{slug}.*.png").first.gsub("#{WWW_DIR}/", "")
 end
 
 def parse_hrconcept_yaml(yaml_text, &block)
