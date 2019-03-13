@@ -60,6 +60,7 @@ const ConceptContainer = styled.div`
   min-height: 250px;
   margin: 10px;
   max-height: ${({ open }) => (open ? '529px' : '250px')};
+  max-width: 295px;
   background-color: white;
   position: relative;
   background: #FFFFFF;
