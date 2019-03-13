@@ -9,9 +9,11 @@ rsync -avz -e "ssh -F /Users/dev/.ssh/config" --exclude='/.git' --filter="dir-me
 ssh do_lotho_concepts -C "./post_rsync.sh"
 ```
 
-# The `.hrconcept` file
+### The `.hrconcept` File
 
-You can add a project to *Concepts* by adding an `.hrconcept` file to the root directory of your project in github. *Concepts* will iterate through each of your public repos looking for this file.
+You can add a project to *Concepts* by adding an `.hrconcept` file to the root
+directory of your project in GitHub. *Concepts* will iterate through each public
+repo of members of the GitHub Hashrocket organization looking for this file.
 
 `.hrconcept` is a YAML file that looks like this:
 
