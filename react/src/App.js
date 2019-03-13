@@ -48,18 +48,19 @@ const ConceptsLogo = styled.div`
 
 const ConceptsContainer = styled.div`
   display: grid;
-  width: 1060px;
-  margin: 40px auto 0;
-  grid-template-columns: repeat(3, 1fr);
-  grid-row-gap: 72px;
-  transition: all .3s ease-in;
+  max-width: 1060px;
+  margin: 30px auto 0;
+  grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
+  grid-gap: 42px;
+  transition: all 0.3s ease-in;
 `;
 
 const ConceptContainer = styled.div`
-  width: 295px;
-  transition: max-height .3s ease-in;
+  transition: max-height 0.3s ease-in;
   min-height: 250px;
-  max-height: ${({open}) => open ? "529px" : "250px" };
+  margin: 10px;
+  max-height: ${({ open }) => (open ? '529px' : '250px')};
+  max-width: 295px;
   background-color: white;
   position: relative;
   background: #FFFFFF;
@@ -71,7 +72,7 @@ const Screenshot = styled.div`
   background-size:     cover;
   background-repeat:   no-repeat;
   background-position: center center;
-  width: 295px;
+  width: 100%;
   height: 166px;
 `;
 
@@ -80,7 +81,7 @@ const ImgFilter = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 295px;
+  width: 100%;
   height: 166px;
 `;
 
