@@ -2,6 +2,19 @@
 
 A gallery for our side projects.
 
+### Setup
+
+To build the app with stubbed data:
+
+```
+$ git clone git@github.com:hashrocket/concepts.git
+$ cd concepts/react
+$ yarn
+$ yarn start
+```
+
+View the app at http://localhost:3000.
+
 ### Deploy
 
 ```
