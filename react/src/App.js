@@ -303,17 +303,17 @@ class App extends Component {
 
     return (
       <ApplicationContainer>
-        <a href="/">
-          <Header>
-            <HashrocketLogo>
-              <img src={hashrocketHeader} alt="hashrocket logo" />
-            </HashrocketLogo>
+        <Header>
+          <HashrocketLogo>
+            <img src={hashrocketHeader} alt="hashrocket logo" />
+          </HashrocketLogo>
+          <a href="/">
             <ConceptsLogo>
               <img src={conceptsHeader} alt="concepts logo" />
             </ConceptsLogo>
-            <Tagline>A Gallery For Our Side Projects</Tagline>
-          </Header>
-        </a>
+          </a>
+          <Tagline>A Gallery For Our Side Projects</Tagline>
+        </Header>
         <ConceptsContainer>
           {this.renderConcepts(
             concepts,
