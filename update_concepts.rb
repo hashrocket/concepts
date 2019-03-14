@@ -359,6 +359,7 @@ valid_concepts = concepts.map do |concept|
     concept[:concept_url] = "#{concept[:slug]}.#{ROOT_DOMAIN}"
     concept[:concept_link_url] = concept_yaml['url'] ? "https://#{concept[:concept_url]}" : concept[:github_url]
     concept[:original_url] = concept_yaml['url'] || concept[:github_url]
+    concept[:is_heroku] = concept[:original_url].include?("heroku")
     concept[:description] = (concept_yaml['description'] || concept.fetch(:description, '')).strip
 
     override_languages = Array(concept_yaml['technologies']) || []
@@ -392,7 +393,8 @@ concepts_json = concepts.map do |concept|
     screenshot_url: concept[:screenshot_url],
     hrcpt_url: concept[:concept_link_url],
     author_url: "https://github.com/#{concept[:login]}",
-    github_url: concept[:github_url]
+    github_url: concept[:github_url],
+    is_heroku: concept[:is_heroku]
   }
 end
 

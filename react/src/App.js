@@ -2,6 +2,7 @@ import React, { Component, useState } from 'react';
 import styled from 'styled-components';
 import hashrocketHeader from './hashrocket-header.svg';
 import conceptsHeader from './concepts-header.svg';
+import herokuLogo from './heroku-logo.svg';
 import githubLogo from './github-logo.svg';
 import { colors } from './colors.js';
 import zip from 'lodash/zip';
@@ -67,7 +68,7 @@ const ConceptContainer = styled.div`
 `;
 
 const Screenshot = styled.div`
-  background-image: url('/${(props) => props.screenshotUrl}');
+  background-image: url('/${props => props.screenshotUrl}');
   background-size:     cover;
   background-repeat:   no-repeat;
   background-position: center center;
@@ -84,6 +85,58 @@ const ImgFilter = styled.div`
   height: 166px;
 `;
 
+const HerokuBanner = styled.div`
+  background: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 166px;
+  font-family: Sarala;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0.9px;
+  opacity: ${({ open }) => (open ? '100' : '0')};
+  z-index: ${({ open }) => (open ? '100' : '-10')};
+  cursor: cursor;
+  transition: opacity 0.2s ease-in;
+`;
+
+const HerokuContainer = styled.div`
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 108px;
+  text-align: center;
+  padding: 8px;
+  @keyframes spinner {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
+const HerokuSpinner = styled.div`
+  width: 26px;
+  height: 26px;
+  border-radius: 20px;
+  background-image: radial-gradient(50% 100%, #fff 0%, #6762a6 100%);
+  position: relative;
+  animation: spinner 1.6s linear infinite;
+`;
+
+const HerokuSpinnerMiddle = styled.div`
+  background-color: white;
+  position: absolute;
+  border-radius: 20px;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+`;
+
 const Title = styled.div`
   background-color: #af1f24;
   font-family: Saira;
@@ -96,6 +149,7 @@ const Title = styled.div`
   top: 124px;
   left: -12px;
   padding: 0 10px;
+  z-index: 1000;
 `;
 
 const AuthorLine = styled.div`
@@ -243,6 +297,7 @@ const InfoArea = props => {
 
 const Concept = props => {
   const [descriptionOpen, setDescriptionOpen] = useState(false);
+  const [displayHerokuBanner, setHerokuDisplayBannerOpen] = useState(false);
 
   const {
     title,
@@ -252,13 +307,32 @@ const Concept = props => {
     github_url,
     author_url,
     slug,
+    is_heroku,
   } = props.concept;
 
   return (
     <ConceptContainer open={descriptionOpen} id={slug}>
-      <a href={props.concept.hrcpt_url}>
+      <a
+        onClick={() => setHerokuDisplayBannerOpen(true)}
+        href={props.concept.hrcpt_url}
+      >
         <Screenshot screenshotUrl={props.concept.screenshot_url} />
         <ImgFilter />
+        {is_heroku && (
+          <HerokuBanner open={displayHerokuBanner}>
+            <HerokuContainer>
+              <img src={herokuLogo} />
+              <div>
+                We’re waking the Heroku dyno
+                <br />
+                Please be patient for ~30s
+              </div>
+              <HerokuSpinner>
+                <HerokuSpinnerMiddle />
+              </HerokuSpinner>
+            </HerokuContainer>
+          </HerokuBanner>
+        )}
         <Title>{title}</Title>
       </a>
       <InfoArea
