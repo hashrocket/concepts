@@ -140,6 +140,7 @@ const TechsLine = styled.div`
 `;
 
 const DownCaret = styled.img`
+  cursor: pointer;
   transition: all 0.3s ease-in;
   margin-right: 7px;
   transform: ${props => (props.descriptionOpen ? 'rotate(0.5turn);' : 'none')};
