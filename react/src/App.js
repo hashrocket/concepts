@@ -304,9 +304,11 @@ class App extends Component {
     return (
       <ApplicationContainer>
         <Header>
-          <HashrocketLogo>
-            <img src={hashrocketHeader} alt="hashrocket logo" />
-          </HashrocketLogo>
+          <a href="https://hashrocket.com">
+            <HashrocketLogo>
+              <img src={hashrocketHeader} alt="hashrocket logo" />
+            </HashrocketLogo>
+          </a>
           <a href="/">
             <ConceptsLogo>
               <img src={conceptsHeader} alt="concepts logo" />
