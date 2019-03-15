@@ -53,14 +53,16 @@ const ConceptsContainer = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
   grid-gap: 42px;
   transition: all 0.3s ease-in;
+  width: 85%;
+  justify-items: center;
 `;
 
 const ConceptContainer = styled.div`
   transition: max-height 0.3s ease-in;
   min-height: 250px;
+  width: 295px;
   margin: 10px;
   max-height: ${({ open }) => (open ? '529px' : '250px')};
-  max-width: 295px;
   background-color: white;
   position: relative;
   background: #ffffff;
