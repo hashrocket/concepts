@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import reverse from 'lodash/reverse';
 import sortBy from 'lodash/sortBy';
 
@@ -8,6 +8,24 @@ import conceptsHeader from './concepts-header.svg';
 import downCaret from './down-caret.svg';
 import githubLogo from './github-logo.svg';
 import hashrocketHeader from './hashrocket-header.svg';
+import herokuLogo from './heroku-logo.svg';
+
+const sizes = {
+  desktop: 992,
+  tablet: 768,
+  phone: 576,
+};
+
+// Iterate through the sizes and create a media template
+const media = Object.keys(sizes).reduce((acc, label) => {
+  acc[label] = (...args) => css`
+    @media (max-width: ${sizes[label] / 16}em) {
+      ${css(...args)};
+    }
+  `;
+
+  return acc;
+}, {});
 
 const ApplicationContainer = styled.div`
   background-color: ${colors.backgroundGrey};
@@ -32,17 +50,27 @@ const Tagline = styled.div`
   text-align: left;
 
   text-decoration: none !important;
+
+  ${media.phone`font-size: 14px;`};
 `;
 
 const Header = styled.header`
   margin: 24px auto 0px;
   width: 400px;
+  ${media.phone`width: 300px;`};
 `;
 
 const HashrocketLogo = styled.div``;
 
+const logoPhoneMediaQuery = media.phone`
+  img {
+    width: 300px;
+  }
+`;
+
 const ConceptsLogo = styled.div`
   margin: 15px 0 8px;
+  ${logoPhoneMediaQuery};
 `;
 
 const ConceptsContainer = styled.div`
@@ -52,7 +80,7 @@ const ConceptsContainer = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
   grid-gap: 42px;
   transition: all 0.3s ease-in;
-  width: 85%;
+  width: 90%;
   justify-items: center;
 `;
 
@@ -223,7 +251,7 @@ const Tech = styled.span`
 const Techs = props => {
   const lastTech = (index, techsLength) => index === techsLength;
 
-  const separatedTechs = props.techs.map((tech, index) => (
+  const techs = props.techs.map((tech, index) => (
     <Fragment key={tech}>
       <Tech
         onClick={() => props.selectTech(tech)}
@@ -235,7 +263,7 @@ const Techs = props => {
     </Fragment>
   ));
 
-  return <div>{separatedTechs}</div>;
+  return <div>{techs}</div>;
 };
 
 const DescriptionContainer = styled.div`
