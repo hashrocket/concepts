@@ -169,6 +169,7 @@ const Author = styled.div`
   letter-spacing: 0.85px;
   text-align: left;
   display: inline-block;
+  white-space: nowrap;
 
   &:hover {
     text-decoration: underline;
