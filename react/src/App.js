@@ -1,14 +1,13 @@
-import React, { Component, useState } from 'react';
+import React, { Component, Fragment, useState } from 'react';
 import styled from 'styled-components';
-import hashrocketHeader from './hashrocket-header.svg';
-import conceptsHeader from './concepts-header.svg';
-import herokuLogo from './heroku-logo.svg';
-import githubLogo from './github-logo.svg';
-import { colors } from './colors.js';
-import zip from 'lodash/zip';
-import sortBy from 'lodash/sortBy';
 import reverse from 'lodash/reverse';
+import sortBy from 'lodash/sortBy';
+
+import { colors } from './colors.js';
+import conceptsHeader from './concepts-header.svg';
 import downCaret from './down-caret.svg';
+import githubLogo from './github-logo.svg';
+import hashrocketHeader from './hashrocket-header.svg';
 
 const ApplicationContainer = styled.div`
   background-color: ${colors.backgroundGrey};
@@ -222,19 +221,21 @@ const Tech = styled.span`
 `;
 
 const Techs = props => {
-  const techs = props.techs.map(tech => (
-    <Tech
-      onClick={() => props.selectTech(tech)}
-      selected={props.selectedTech === tech}
-      key={tech}
-    >
-      {tech}
-    </Tech>
+  const lastTech = (index, techsLength) => index === techsLength;
+
+  const separatedTechs = props.techs.map((tech, index) => (
+    <Fragment key={tech}>
+      <Tech
+        onClick={() => props.selectTech(tech)}
+        selected={props.selectedTech === tech}
+      >
+        {tech}
+      </Tech>
+      {lastTech(index, props.techs.length - 1) ? null : <span>•</span>}
+    </Fragment>
   ));
 
-  const spans = zip(techs, Array(techs.length - 1).fill(<span>•</span>));
-
-  return <div>{spans}</div>;
+  return <div>{separatedTechs}</div>;
 };
 
 const DescriptionContainer = styled.div`
