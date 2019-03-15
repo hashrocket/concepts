@@ -275,7 +275,7 @@ const InfoArea = props => {
           <a href={props.authorUrl}>by {props.author}</a>
         </Author>
         <a href={props.githubUrl}>
-          <GithubLogo src={githubLogo} />
+          <GithubLogo src={githubLogo} alt={`${props.title} Github`} />
         </a>
       </AuthorLine>
       <TechsLine>
@@ -350,6 +350,7 @@ const Concept = props => {
         descriptionOpen={descriptionOpen}
         selectTech={props.selectTech}
         selectedTech={props.selectedTech}
+        title={title}
       />
     </ConceptContainer>
   );
