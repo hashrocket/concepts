@@ -288,6 +288,7 @@ const InfoArea = props => {
           onClick={props.toggleDescription}
           descriptionOpen={props.descriptionOpen}
           src={downCaret}
+          alt={`${props.title} description`}
         />
       </TechsLine>
       <Description
