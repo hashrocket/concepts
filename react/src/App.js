@@ -354,7 +354,7 @@ const Concept = props => {
         {is_heroku && (
           <HerokuBanner open={displayHerokuBanner}>
             <HerokuContainer>
-              <img src={herokuLogo} />
+              <img src={herokuLogo} alt="Heroku Logo" />
               <div>
                 We’re waking the Heroku dyno
                 <br />
