@@ -223,7 +223,7 @@ const Tech = styled.span`
 const Techs = props => {
   const lastTech = (index, techsLength) => index === techsLength;
 
-  const techs = props.techs.map((tech, index) => (
+  const separatedTechs = props.techs.map((tech, index) => (
     <Fragment key={tech}>
       <Tech
         onClick={() => props.selectTech(tech)}
@@ -235,7 +235,7 @@ const Techs = props => {
     </Fragment>
   ));
 
-  return <div>{techs}</div>;
+  return <div>{separatedTechs}</div>;
 };
 
 const DescriptionContainer = styled.div`
