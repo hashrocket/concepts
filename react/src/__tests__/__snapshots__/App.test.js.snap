@@ -1,0 +1,320 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders the concepts 1`] = `
+<div
+  className="sc-bdVaJa bGXtxv"
+>
+  <header
+    className="sc-htpNat kyUFmG"
+  >
+    <a
+      href="https://hashrocket.com"
+    >
+      <div
+        className="sc-bxivhb bUZGRr"
+      >
+        <img
+          alt="hashrocket logo"
+          src="hashrocket-header.svg"
+        />
+      </div>
+    </a>
+    <a
+      href="/"
+    >
+      <div
+        className="sc-ifAKCX fgFZDe"
+      >
+        <img
+          alt="concepts logo"
+          src="concepts-header.svg"
+        />
+      </div>
+    </a>
+    <div
+      className="sc-bwzfXH eHnsSk"
+    >
+      A Gallery For Our Side Projects
+    </div>
+  </header>
+  <div
+    className="sc-EHOje TylnL"
+  >
+    <div
+      className="sc-bZQynM efeUTq"
+      open={false}
+    >
+      <a
+        href="https://virtuoso.hrcpt.online"
+        onClick={[Function]}
+      >
+        <div
+          className="sc-gzVnrw guBrVN"
+        />
+        <div
+          className="sc-htoDjs fhoPnw"
+        />
+        <div
+          className="sc-VigVT jCWGcQ"
+        >
+          Virtuoso
+        </div>
+      </a>
+      <div>
+        <div
+          className="sc-jTzLTM ifVPOo"
+        >
+          <div
+            className="sc-fjdhpX leLJWV"
+          >
+            <a
+              href="https://github.com/rpmessner"
+            >
+              by 
+              Ryan Messner
+            </a>
+          </div>
+          <a
+            href="https://github.com/rpmessner/virtuoso"
+          >
+            <img
+              alt="Virtuoso Github"
+              className="sc-jzJRlG bPhQgC"
+              src="github-logo.svg"
+            />
+          </a>
+        </div>
+        <div
+          className="sc-cSHVUG kQiZmg"
+        >
+          <div>
+            <span
+              className="sc-chPdSV cVhYpf"
+              onClick={[Function]}
+              selected={false}
+            >
+              JavaScript
+            </span>
+          </div>
+          <img
+            alt="Virtuoso description"
+            className="sc-kAzzGY jrwkUh"
+            onClick={[Function]}
+            src="down-caret.svg"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      className="sc-bZQynM efeUTq"
+      open={false}
+    >
+      <a
+        href="https://ceramic-nation.hrcpt.online"
+        onClick={[Function]}
+      >
+        <div
+          className="sc-gzVnrw ekRMNG"
+        />
+        <div
+          className="sc-htoDjs fhoPnw"
+        />
+        <div
+          className="sc-dnqmqq dWyYuZ"
+          open={false}
+        >
+          <div
+            className="sc-iwsKbI PZppk"
+          >
+            <img
+              alt="Heroku Logo"
+              src="heroku-logo.svg"
+            />
+            <div>
+              We’re waking the Heroku dyno
+              <br />
+              Please be patient for ~30s
+            </div>
+            <div
+              className="sc-gZMcBi hUnRZf"
+            >
+              <div
+                className="sc-gqjmRU kvYnzV"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="sc-VigVT jCWGcQ"
+        >
+          Ceramic Nation
+        </div>
+      </a>
+      <div>
+        <div
+          className="sc-jTzLTM ifVPOo"
+        >
+          <div
+            className="sc-fjdhpX leLJWV"
+          >
+            <a
+              href="https://github.com/jwworth"
+            >
+              by 
+              Jake Worth
+            </a>
+          </div>
+          <a
+            href="https://github.com/jwworth/novel"
+          >
+            <img
+              alt="Ceramic Nation Github"
+              className="sc-jzJRlG bPhQgC"
+              src="github-logo.svg"
+            />
+          </a>
+        </div>
+        <div
+          className="sc-cSHVUG kQiZmg"
+        >
+          <div>
+            <span
+              className="sc-chPdSV cVhYpf"
+              onClick={[Function]}
+              selected={false}
+            >
+              Ruby
+            </span>
+            <span>
+              •
+            </span>
+            <span
+              className="sc-chPdSV cVhYpf"
+              onClick={[Function]}
+              selected={false}
+            >
+              JavaScript
+            </span>
+          </div>
+          <img
+            alt="Ceramic Nation description"
+            className="sc-kAzzGY jrwkUh"
+            onClick={[Function]}
+            src="down-caret.svg"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      className="sc-bZQynM efeUTq"
+      open={false}
+    >
+      <a
+        href="https://shapedrawer.hrcpt.online"
+        onClick={[Function]}
+      >
+        <div
+          className="sc-gzVnrw laNIzT"
+        />
+        <div
+          className="sc-htoDjs fhoPnw"
+        />
+        <div
+          className="sc-dnqmqq dWyYuZ"
+          open={false}
+        >
+          <div
+            className="sc-iwsKbI PZppk"
+          >
+            <img
+              alt="Heroku Logo"
+              src="heroku-logo.svg"
+            />
+            <div>
+              We’re waking the Heroku dyno
+              <br />
+              Please be patient for ~30s
+            </div>
+            <div
+              className="sc-gZMcBi hUnRZf"
+            >
+              <div
+                className="sc-gqjmRU kvYnzV"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="sc-VigVT jCWGcQ"
+        >
+          Shapedrawer
+        </div>
+      </a>
+      <div>
+        <div
+          className="sc-jTzLTM ifVPOo"
+        >
+          <div
+            className="sc-fjdhpX leLJWV"
+          >
+            <a
+              href="https://github.com/chriserin"
+            >
+              by 
+              Chris Erin
+            </a>
+          </div>
+          <a
+            href="https://github.com/chriserin/ShapeDrawer"
+          >
+            <img
+              alt="Shapedrawer Github"
+              className="sc-jzJRlG bPhQgC"
+              src="github-logo.svg"
+            />
+          </a>
+        </div>
+        <div
+          className="sc-cSHVUG kQiZmg"
+        >
+          <div>
+            <span
+              className="sc-chPdSV cVhYpf"
+              onClick={[Function]}
+              selected={false}
+            >
+              Ruby
+            </span>
+            <span>
+              •
+            </span>
+            <span
+              className="sc-chPdSV cVhYpf"
+              onClick={[Function]}
+              selected={false}
+            >
+              JavaScript
+            </span>
+            <span>
+              •
+            </span>
+            <span
+              className="sc-chPdSV cVhYpf"
+              onClick={[Function]}
+              selected={false}
+            >
+              CoffeeScript
+            </span>
+          </div>
+          <img
+            alt="Shapedrawer description"
+            className="sc-kAzzGY jrwkUh"
+            onClick={[Function]}
+            src="down-caret.svg"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
