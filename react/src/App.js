@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState } from 'react';
+import React, { Component, Fragment, useState, useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import reverse from 'lodash/reverse';
 import sortBy from 'lodash/sortBy';
@@ -271,8 +271,6 @@ const DescriptionContainer = styled.div`
     transition: all 0.3s ease-in;
     padding: 0px 20px 0px 10px;
     opacity: ${props => (!props.open ? 0 : 1)};
-    transition-timing-function: ${props =>
-      !props.open ? 'ease-in' : 'ease-in'};
     ${props =>
       !props.open
         ? 'max-height: 0; line-height: 5px; font-size: 5px; '
@@ -289,14 +287,26 @@ const DescriptionContainer = styled.div`
 `;
 
 const Description = props => {
+  useEffect(
+    () => {
+      if (!props.open) {
+        const fn = () => (props.container.current.style = 'display: none;');
+        setTimeout(fn, 300);
+      }
+    },
+    [props.open]
+  );
+
   return (
     <DescriptionContainer open={props.open}>
-      <p>{props.description}</p>
+      <p ref={props.container}>{props.description}</p>
     </DescriptionContainer>
   );
 };
 
 const InfoArea = props => {
+  const container = useRef(null);
+
   return (
     <div>
       <AuthorLine>
@@ -314,7 +324,12 @@ const InfoArea = props => {
           selectedTech={props.selectedTech}
         />
         <DownCaret
-          onClick={props.toggleDescription}
+          onClick={() => {
+            props.toggleDescription();
+          }}
+          onMouseDown={() => {
+            container.current.style = '';
+          }}
           descriptionOpen={props.descriptionOpen}
           src={downCaret}
           alt={`${props.title} description`}
@@ -323,6 +338,7 @@ const InfoArea = props => {
       <Description
         open={props.descriptionOpen}
         description={props.description}
+        container={container}
       />
     </div>
   );
