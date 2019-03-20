@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useState, useEffect, useRef } from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import reverse from 'lodash/reverse';
 import sortBy from 'lodash/sortBy';
 
@@ -266,17 +266,35 @@ const Techs = props => {
   return <div>{techs}</div>;
 };
 
-const DescriptionContainer = styled.div`
-  p {
-    transition: all 0.3s ease-in;
-    padding: 0px 20px 0px 10px;
-    opacity: ${props => (!props.open ? 0 : 1)};
-    ${props =>
-      !props.open
-        ? 'max-height: 0; line-height: 5px; font-size: 5px; '
-        : 'max-height: 320px; line-height: inherit; font-size: inherit;'};
+const expandKeyframes = keyframes`
+  from {
+    max-height: 0;
+    line-height: 1px;
+    font-size: 1px;
+    opacity: 0;
   }
 
+  to {
+    max-height: 320px;
+    line-height: inherit;
+    font-size: inherit;
+    opacity: 1;
+  }
+`;
+
+const AnimateParagraph = styled.p`
+  padding: 0px 20px 0px 10px;
+  animation: ${expandKeyframes} 0.3s ease-in;
+`;
+
+const DeAnimateParagraph = styled.p`
+  padding: 0px 20px 0px 10px;
+  opacity: 0;
+  animation: ${expandKeyframes} 0.3s ease-in;
+  animation-direction: reverse;
+`;
+
+const DescriptionContainer = styled.div`
   font-family: 'EB Garamond';
   font-weight: 400;
   font-size: 14px;
@@ -286,26 +304,29 @@ const DescriptionContainer = styled.div`
   line-height: 22px;
 `;
 
-const Description = props => {
+const Description = ({ open, description, container, setIsAnimating }) => {
   useEffect(
     () => {
-      if (!props.open) {
-        const fn = () => (props.container.current.style = 'display: none;');
-        setTimeout(fn, 300);
-      }
+      const fn = () => setIsAnimating(open);
+      setTimeout(fn, 300);
     },
-    [props.open]
+    [open]
   );
 
   return (
-    <DescriptionContainer open={props.open}>
-      <p ref={props.container}>{props.description}</p>
+    <DescriptionContainer open={open}>
+      {open ? (
+        <AnimateParagraph ref={container}>{description}</AnimateParagraph>
+      ) : (
+        <DeAnimateParagraph ref={container}>{description}</DeAnimateParagraph>
+      )}
     </DescriptionContainer>
   );
 };
 
 const InfoArea = props => {
   const container = useRef(null);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   return (
     <div>
@@ -327,19 +348,19 @@ const InfoArea = props => {
           onClick={() => {
             props.toggleDescription();
           }}
-          onMouseDown={() => {
-            container.current.style = '';
-          }}
           descriptionOpen={props.descriptionOpen}
           src={downCaret}
           alt={`${props.title} description`}
         />
       </TechsLine>
-      <Description
-        open={props.descriptionOpen}
-        description={props.description}
-        container={container}
-      />
+      {props.descriptionOpen || isAnimating ? (
+        <Description
+          open={props.descriptionOpen}
+          description={props.description}
+          container={container}
+          setIsAnimating={setIsAnimating}
+        />
+      ) : null}
     </div>
   );
 };
