@@ -241,6 +241,15 @@ def get_nginx_config(concept)
                         BANNER_FILTER
                       end
 
+  meta_tags = <<~META
+    <meta name=\"twitter:card\" content=\"summary_large_image\">
+    <meta name=\"twitter:site\" content=\"@hashrocket\">
+    <meta name=\"twitter:creator\" content=\"@hashrocket\">
+    <meta name=\"twitter:title\" content=\"#{concept[:title]}\">
+    <meta name=\"twitter:description\" content=\"#{concept[:description].gsub("'", "\\'")}\">
+    <meta name=\"twitter:image\" content=\"#{concept[:screenshot_url]}\">
+  META
+
   <<~NGINX
   # this is an auto-generated from #{__FILE__}
   server {
@@ -262,7 +271,7 @@ def get_nginx_config(concept)
       proxy_set_header X-Forwarded-Proto http;
     }
 
-    sub_filter '</head>' '<script>window.addEventListener("message", function(e) { if (window.origin !== e.origin) {window.location = e.data;}})</script></head>';
+    sub_filter '</head>' '#{meta_tags}<script>window.addEventListener("message", function(e) { if (window.origin !== e.origin) {window.location = e.data;}})</script></head>';
     #{banner_sub_filter}
   }
   NGINX
@@ -332,6 +341,8 @@ end
 # *********** START EXECUTION ********** #
 setup_logging
 setup_exit
+
+logger.info("Starting update_concepts.rb process")
 
 graphql_response_json = make_initial_github_request
 
