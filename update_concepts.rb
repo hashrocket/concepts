@@ -242,12 +242,12 @@ def get_nginx_config(concept)
                       end
 
   meta_tags = <<~META
-    <meta name=\"twitter:card\" content=\"summary_large_image\">
+    <meta name=\"twitter:card\" content=\"summary\">
     <meta name=\"twitter:site\" content=\"@hashrocket\">
     <meta name=\"twitter:creator\" content=\"@hashrocket\">
     <meta name=\"twitter:title\" content=\"#{concept[:title]}\">
     <meta name=\"twitter:description\" content=\"#{concept[:description].gsub("'", "\\'")}\">
-    <meta name=\"twitter:image\" content=\"#{concept[:screenshot_url]}\">
+    <meta name=\"twitter:image\" content=\"https://#{ROOT_DOMAIN_URL}/#{concept[:screenshot_url]}\">
   META
 
   <<~NGINX
