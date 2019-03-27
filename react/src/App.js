@@ -181,6 +181,10 @@ const Title = styled.div`
   z-index: 1000;
 `;
 
+const HigherTitle = styled(Title)`
+  top: 82px;
+`;
+
 const AuthorLine = styled.div`
   margin-top: 10px;
   padding: 0 10px;
@@ -365,6 +369,20 @@ const InfoArea = props => {
   );
 };
 
+const renderTitle = title => {
+  if (title.length > 22) {
+    const words = title.split(' ');
+    return (
+      <Fragment>
+        <HigherTitle>{words.slice(0, words.length - 1).join(' ')}</HigherTitle>
+        <Title>{words[words.length - 1]}</Title>
+      </Fragment>
+    );
+  } else {
+    return <Title>{title}</Title>;
+  }
+};
+
 const Concept = props => {
   const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [displayHerokuBanner, setHerokuDisplayBannerOpen] = useState(false);
@@ -403,7 +421,7 @@ const Concept = props => {
             </HerokuContainer>
           </HerokuBanner>
         )}
-        <Title>{title}</Title>
+        {renderTitle(title)}
       </a>
       <InfoArea
         author={full_name}

@@ -62,10 +62,10 @@ exports[`renders the concepts 1`] = `
       </a>
       <div>
         <div
-          className="sc-jTzLTM ifVPOo"
+          className="sc-fjdhpX buikdd"
         >
           <div
-            className="sc-fjdhpX leLJWV"
+            className="sc-jzJRlG ijxxOu"
           >
             <a
               href="https://github.com/rpmessner"
@@ -79,17 +79,17 @@ exports[`renders the concepts 1`] = `
           >
             <img
               alt="Virtuoso Github"
-              className="sc-jzJRlG bPhQgC"
+              className="sc-cSHVUG fINiSI"
               src="github-logo.svg"
             />
           </a>
         </div>
         <div
-          className="sc-cSHVUG kQiZmg"
+          className="sc-kAzzGY cDCBFy"
         >
           <div>
             <span
-              className="sc-chPdSV cVhYpf"
+              className="sc-kgoBCf gltWlu"
               onClick={[Function]}
               selected={false}
             >
@@ -98,7 +98,7 @@ exports[`renders the concepts 1`] = `
           </div>
           <img
             alt="Virtuoso description"
-            className="sc-kAzzGY jrwkUh"
+            className="sc-chPdSV kOQaGa"
             onClick={[Function]}
             src="down-caret.svg"
           />
@@ -152,10 +152,10 @@ exports[`renders the concepts 1`] = `
       </a>
       <div>
         <div
-          className="sc-jTzLTM ifVPOo"
+          className="sc-fjdhpX buikdd"
         >
           <div
-            className="sc-fjdhpX leLJWV"
+            className="sc-jzJRlG ijxxOu"
           >
             <a
               href="https://github.com/jwworth"
@@ -169,17 +169,17 @@ exports[`renders the concepts 1`] = `
           >
             <img
               alt="Ceramic Nation Github"
-              className="sc-jzJRlG bPhQgC"
+              className="sc-cSHVUG fINiSI"
               src="github-logo.svg"
             />
           </a>
         </div>
         <div
-          className="sc-cSHVUG kQiZmg"
+          className="sc-kAzzGY cDCBFy"
         >
           <div>
             <span
-              className="sc-chPdSV cVhYpf"
+              className="sc-kgoBCf gltWlu"
               onClick={[Function]}
               selected={false}
             >
@@ -189,7 +189,7 @@ exports[`renders the concepts 1`] = `
               •
             </span>
             <span
-              className="sc-chPdSV cVhYpf"
+              className="sc-kgoBCf gltWlu"
               onClick={[Function]}
               selected={false}
             >
@@ -198,7 +198,7 @@ exports[`renders the concepts 1`] = `
           </div>
           <img
             alt="Ceramic Nation description"
-            className="sc-kAzzGY jrwkUh"
+            className="sc-chPdSV kOQaGa"
             onClick={[Function]}
             src="down-caret.svg"
           />
@@ -252,10 +252,10 @@ exports[`renders the concepts 1`] = `
       </a>
       <div>
         <div
-          className="sc-jTzLTM ifVPOo"
+          className="sc-fjdhpX buikdd"
         >
           <div
-            className="sc-fjdhpX leLJWV"
+            className="sc-jzJRlG ijxxOu"
           >
             <a
               href="https://github.com/chriserin"
@@ -269,17 +269,17 @@ exports[`renders the concepts 1`] = `
           >
             <img
               alt="Shapedrawer Github"
-              className="sc-jzJRlG bPhQgC"
+              className="sc-cSHVUG fINiSI"
               src="github-logo.svg"
             />
           </a>
         </div>
         <div
-          className="sc-cSHVUG kQiZmg"
+          className="sc-kAzzGY cDCBFy"
         >
           <div>
             <span
-              className="sc-chPdSV cVhYpf"
+              className="sc-kgoBCf gltWlu"
               onClick={[Function]}
               selected={false}
             >
@@ -289,7 +289,7 @@ exports[`renders the concepts 1`] = `
               •
             </span>
             <span
-              className="sc-chPdSV cVhYpf"
+              className="sc-kgoBCf gltWlu"
               onClick={[Function]}
               selected={false}
             >
@@ -299,7 +299,7 @@ exports[`renders the concepts 1`] = `
               •
             </span>
             <span
-              className="sc-chPdSV cVhYpf"
+              className="sc-kgoBCf gltWlu"
               onClick={[Function]}
               selected={false}
             >
@@ -308,7 +308,7 @@ exports[`renders the concepts 1`] = `
           </div>
           <img
             alt="Shapedrawer description"
-            className="sc-kAzzGY jrwkUh"
+            className="sc-chPdSV kOQaGa"
             onClick={[Function]}
             src="down-caret.svg"
           />
