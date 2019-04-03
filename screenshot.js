@@ -7,13 +7,29 @@ const Jimp = require('jimp');
 
 const url = process.argv[2];
 const jpgPath = process.argv[3];
+const dimensionsType = process.argv[4];
+
+const dimensions = {
+  sixteenNine: {
+    full: { width: 1920, height: 1080 },
+    scaled: { width: 295, height: 166 },
+  },
+  twitter: {
+    full: { width: 1080, height: 1080 },
+    scaled: { width: 144, height: 144 },
+  },
+};
+
+if (!dimensions[dimensionsType]) {
+  throw `The dimensions type "${dimensionsType}" does not exist`;
+}
 
 (async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage().catch(err => {
     console.log(err);
   });
-  await page.setViewport({ width: 1920, height: 1080 }); // 16:9 ratio
+  await page.setViewport(dimensions[dimensionsType].full);
   await getScreenshot(page, jpgPath);
 
   let counter = 0;
@@ -27,14 +43,14 @@ const jpgPath = process.argv[3];
 
   await browser.close();
 
-  await scaleScreenshot(jpgPath);
+  await scaleScreenshot(jpgPath, dimensions[dimensionsType].scaled);
 })();
 
-async function scaleScreenshot(file) {
+async function scaleScreenshot(file, dimensions) {
   await Jimp.read(file, (err, screenshot) => {
     if (err) throw err;
     screenshot
-      .resize(295, 166) // resize
+      .resize(dimensions.width, dimensions.height) // resize
       .write(file); // save
   });
 }

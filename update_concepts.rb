@@ -75,7 +75,7 @@ def make_initial_github_request
   payload = {
     "query": "query {
     organization(login: \"hashrocket\") {
-      members(first: 50) {
+      membersWithRole(first: 50) {
         edges {
           node {
             ... on User {
@@ -122,7 +122,7 @@ def make_initial_github_request
 end
 
 def retrieve_concepts_from_initial_query(graphql_response_json)
-  member_edges = graphql_response_json["data"]["organization"]["members"]["edges"]
+  member_edges = graphql_response_json["data"]["organization"]["membersWithRole"]["edges"]
 
   next_queries = []
 
@@ -144,7 +144,7 @@ def retrieve_concepts_from_initial_query(graphql_response_json)
 end
 
 def collect_users(graphql_response_json)
-  member_edges = graphql_response_json["data"]["organization"]["members"]["edges"]
+  member_edges = graphql_response_json["data"]["organization"]["membersWithRole"]["edges"]
 
   member_edges.reduce({}) do |members_hash, member_edge|
     login = member_edge["node"]["login"]
@@ -247,7 +247,7 @@ def get_nginx_config(concept)
     <meta name=\"twitter:creator\" content=\"@hashrocket\">
     <meta name=\"twitter:title\" content=\"#{concept[:title]}\">
     <meta name=\"twitter:description\" content=\"#{concept[:description].gsub("'", "\\'")}\">
-    <meta name=\"twitter:image\" content=\"https://#{ROOT_DOMAIN_URL}/#{concept[:screenshot_url]}\">
+    <meta name=\"twitter:image\" content=\"https://#{ROOT_DOMAIN_URL}/#{concept[:twitter_screenshot_url]}\">
   META
 
   <<~NGINX
@@ -279,7 +279,7 @@ end
 
 WHITE_IMAGE_OF_SPECIFIC_SIZE = "89283a7c5a1284bd6353384b5e86ea2fa282bbf8"
 
-def get_concept_screenshot(slug, original_url)
+def get_concept_screenshot(slug, original_url, dimensionsType)
   screenshot_path = "#{WWW_DIR}/images/#{slug}.png"
 
 
@@ -299,7 +299,7 @@ def get_concept_screenshot(slug, original_url)
       FileUtils.mv(screenshot_path, "#{screenshot_path}.bk")
     end
 
-    command = "sudo -u #{USER} node screenshot.js #{original_url} #{screenshot_path}"
+    command = "sudo -u #{USER} node screenshot.js #{original_url} #{screenshot_path} #{dimensionsType}"
     `#{command}`
 
     unless File.exists?(screenshot_path)
@@ -378,8 +378,12 @@ valid_concepts = concepts.map do |concept|
     concept[:languages] = concept[:languages].reject {|lang| lang =~ /html|css/i}
     concept[:banner] = concept_yaml.fetch('banner', "true").to_s == "true"
 
-    screenshot_url = get_concept_screenshot(concept[:slug], concept[:original_url])
+    screenshot_url = get_concept_screenshot(concept[:slug], concept[:original_url], "sixteenNine")
     concept[:screenshot_url] = screenshot_url
+
+    twitter_screenshot_url = get_concept_screenshot("twitter-" + concept[:slug], concept[:original_url], "twitter")
+    concept[:twitter_screenshot_url] = twitter_screenshot_url
+
     concept_nginx = get_nginx_config(concept)
 
     File.write("#{NGINX_DIR_TMP}/#{concept[:slug]}", concept_nginx)
@@ -402,6 +406,7 @@ concepts_json = concepts.map do |concept|
     description: concept[:description],
     languages: concept[:languages].uniq {|x| x.downcase},
     screenshot_url: concept[:screenshot_url],
+    twitter_screenshot_url: concept[:twitter_screenshot_url],
     hrcpt_url: concept[:concept_link_url],
     author_url: "https://github.com/#{concept[:login]}",
     github_url: concept[:github_url],
