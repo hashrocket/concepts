@@ -241,6 +241,18 @@ def get_nginx_config(concept)
                         BANNER_FILTER
                       end
 
+  analytics_tag = <<~ANALYTICS
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-7742210-19"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+
+      gtag("config", "UA-7742210-19");
+    </script>
+  ANALYTICS
+
   meta_tags = <<~META
     <meta name=\"twitter:card\" content=\"summary\">
     <meta name=\"twitter:site\" content=\"@hashrocket\">
@@ -271,7 +283,7 @@ def get_nginx_config(concept)
       proxy_set_header X-Forwarded-Proto http;
     }
 
-    sub_filter '</head>' '#{meta_tags}<script>window.addEventListener("message", function(e) { if (window.origin !== e.origin) {window.location = e.data;}})</script></head>';
+    sub_filter '</head>' '#{analytics_tag}#{meta_tags}<script>window.addEventListener("message", function(e) { if (window.origin !== e.origin) {window.location = e.data;}})</script></head>';
     #{banner_sub_filter}
   }
   NGINX
