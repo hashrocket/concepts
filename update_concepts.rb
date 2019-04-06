@@ -291,9 +291,23 @@ end
 
 WHITE_IMAGE_OF_SPECIFIC_SIZE = "89283a7c5a1284bd6353384b5e86ea2fa282bbf8"
 
+def get_cover_image(slug, cover_image_url)
+  if cover_image_url.include?("gif")
+    screenshot_path = "#{WWW_DIR}/images/#{slug}.gif"
+    `wget #{cover_image_url} -O #{screenshot_path}`
+    `convert '#{screenshot_path}[0]' #{WWW_DIR}/images/#{slug}.first.gif`
+    FileUtils.cp("#{WWW_DIR}/images/#{slug}.first.gif", "#{WWW_DIR}/images/twitter-#{slug}.first.gif")
+    ["images/#{slug}.first.gif", "images/#{slug}.gif", "images/twitter-#{slug}.first.gif"]
+  else
+    screenshot_path = "#{WWW_DIR}/images/#{slug}.png"
+    `wget #{cover_image_url} -O #{screenshot_path}`
+    FileUtils.cp(screenshot_path, "#{WWW_DIR}/images/twitter-#{slug}.png")
+    ["images/#{slug}.png", "images/#{slug}.png", "images/twitter-#{slug}.png"]
+  end
+end
+
 def get_concept_screenshot(slug, original_url, dimensionsType)
   screenshot_path = "#{WWW_DIR}/images/#{slug}.png"
-
 
   get_screenshot = if File.exists?(screenshot_path)
                      time_since_screenshot = Time.new - File.mtime(screenshot_path)
@@ -390,11 +404,18 @@ valid_concepts = concepts.map do |concept|
     concept[:languages] = concept[:languages].reject {|lang| lang =~ /html|css/i}
     concept[:banner] = concept_yaml.fetch('banner', "true").to_s == "true"
 
-    screenshot_url = get_concept_screenshot(concept[:slug], concept[:original_url], "sixteenNine")
-    concept[:screenshot_url] = screenshot_url
+    if concept_yaml['cover_image']
+      cover_image, animated_image, twitter_image = get_cover_image(concept[:slug], concept_yaml['cover_image'])
+      concept[:cover_image] = cover_image
+      concept[:screenshot_url] = animated_image
+      concept[:twitter_screenshot_url] = twitter_image
+    else
+      screenshot_url = get_concept_screenshot(concept[:slug], concept[:original_url], "sixteenNine")
+      concept[:screenshot_url] = screenshot_url
 
-    twitter_screenshot_url = get_concept_screenshot("twitter-" + concept[:slug], concept[:original_url], "twitter")
-    concept[:twitter_screenshot_url] = twitter_screenshot_url
+      twitter_screenshot_url = get_concept_screenshot("twitter-" + concept[:slug], concept[:original_url], "twitter")
+      concept[:twitter_screenshot_url] = twitter_screenshot_url
+    end
 
     concept_nginx = get_nginx_config(concept)
 
@@ -417,6 +438,7 @@ concepts_json = concepts.map do |concept|
     full_name: users_map[concept[:login]],
     description: concept[:description],
     languages: concept[:languages].uniq {|x| x.downcase},
+    cover_image: concept[:cover_image],
     screenshot_url: concept[:screenshot_url],
     twitter_screenshot_url: concept[:twitter_screenshot_url],
     hrcpt_url: concept[:concept_link_url],

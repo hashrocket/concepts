@@ -97,12 +97,16 @@ const ConceptContainer = styled.div`
 `;
 
 const Screenshot = styled.div`
-  background-image: url('/${props => props.screenshotUrl}');
+  background-image: url('${props => '/' + props.coverImage}');
   background-size:     cover;
   background-repeat:   no-repeat;
   background-position: center center;
   width: 100%;
   height: 166px;
+
+  :hover {
+    background-image: url('${props => '/' + props.screenshotPath}');
+  }
 `;
 
 const ImgFilter = styled.div`
@@ -386,6 +390,7 @@ const renderTitle = title => {
 const Concept = props => {
   const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [displayHerokuBanner, setHerokuDisplayBannerOpen] = useState(false);
+  const [removeFilter, setRemoveFilter] = useState(false);
 
   const {
     title,
@@ -403,9 +408,14 @@ const Concept = props => {
       <a
         onClick={() => setHerokuDisplayBannerOpen(true)}
         href={props.concept.hrcpt_url}
+        onMouseEnter={() => setRemoveFilter(true)}
+        onMouseLeave={() => setRemoveFilter(false)}
       >
-        <Screenshot screenshotUrl={props.concept.screenshot_url} />
-        <ImgFilter />
+        <Screenshot
+          coverImage={props.concept.cover_image || props.concept.screenshot_url}
+          screenshotPath={props.concept.screenshot_url}
+        />
+        {!removeFilter && <ImgFilter />}
         {is_heroku && (
           <HerokuBanner open={displayHerokuBanner}>
             <HerokuContainer>
