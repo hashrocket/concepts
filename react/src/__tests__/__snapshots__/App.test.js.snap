@@ -51,7 +51,7 @@ exports[`renders the concepts 1`] = `
         onMouseLeave={[Function]}
       >
         <div
-          className="sc-gzVnrw guBrVN"
+          className="sc-gzVnrw cdQPlJ"
         />
         <div
           className="sc-htoDjs fhoPnw"
@@ -118,7 +118,7 @@ exports[`renders the concepts 1`] = `
         onMouseLeave={[Function]}
       >
         <div
-          className="sc-gzVnrw ekRMNG"
+          className="sc-gzVnrw kMqkuc"
         />
         <div
           className="sc-htoDjs fhoPnw"
@@ -220,7 +220,7 @@ exports[`renders the concepts 1`] = `
         onMouseLeave={[Function]}
       >
         <div
-          className="sc-gzVnrw laNIzT"
+          className="sc-gzVnrw wbAbt"
         />
         <div
           className="sc-htoDjs fhoPnw"
