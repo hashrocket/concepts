@@ -47,6 +47,8 @@ exports[`renders the concepts 1`] = `
       <a
         href="https://virtuoso.hrcpt.online"
         onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
       >
         <div
           className="sc-gzVnrw guBrVN"
@@ -112,6 +114,8 @@ exports[`renders the concepts 1`] = `
       <a
         href="https://ceramic-nation.hrcpt.online"
         onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
       >
         <div
           className="sc-gzVnrw ekRMNG"
@@ -212,6 +216,8 @@ exports[`renders the concepts 1`] = `
       <a
         href="https://shapedrawer.hrcpt.online"
         onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
       >
         <div
           className="sc-gzVnrw laNIzT"
