@@ -1,5 +1,7 @@
 # Concepts
 
+[![CircleCI](https://circleci.com/gh/hashrocket/concepts.svg?style=svg)](https://circleci.com/gh/hashrocket/concepts)
+
 A gallery for our side projects.
 
 ### Setup
